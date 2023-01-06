@@ -1,0 +1,152 @@
+$threads-font-path: '~plaid-threads/fonts';
+@import '~plaid-threads/scss/typography';
+
+// variables: colors, box-shadows, animations, etc
+@import '~plaid-threads/scss/variables';
+// tokens: CSS variable versions of colors and color-based values
+@import '~plaid-threads/scss/tokens';
+@import '~plaid-threads/scss/breakpoints';
+
+p, .p {
+  font-size: 1.7rem;
+}
+
+
+.App {
+  max-width: 150 * $unit;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 7 * $unit 5 * $unit;
+  position: relative;
+  height: 100%;
+
+  @include breakpoint-and-up('large') {
+    position: relative;
+  }
+}
+
+h4 {
+  margin-bottom: 1rem;
+}
+
+.balance {
+  margin-top: 0;
+}
+
+.feedback {
+  position: fixed;
+  top: -1px;
+  right: 0px;
+  @include breakpoint-and-up('large') {
+    right: 7 * $unit;
+  }
+  display: block;
+}
+
+
+// Show terminal above link
+$max-z-index: 2147483647;
+
+iframe[id*='plaid-link-iframe'] {
+  z-index: $max-z-index - 1!important;
+}
+
+.terminal {
+  position: fixed;
+  bottom: -1px;
+
+  z-index: $max-z-index;
+  border-radius: $border-radius;
+  box-shadow: $shadow-4;
+
+  left: 0;
+  right: 0;
+
+  @include breakpoint-and-up('large') {
+    width: 70 * $unit;
+    left: auto;
+    right: 7 * $unit;
+    bottom: 0;
+  }
+
+  .entries {
+    $terminal-padding-x: 1rem;
+
+    background: $black;
+    overflow-y: scroll;
+    height: 50 * $unit;
+    width: 100%;
+
+    // Hide scrollbar
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    &::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
+
+    [class*='CodeBlock-module_pre'] {
+      width: 100%;
+      border-radius: 0;
+    }
+
+    [class*='CodeBlock-module_scrollContainer'] {
+      padding: 0rem;
+      border-top: 1px solid darken($dark-gray, 10%);
+    }
+
+    pre {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    span {
+      font-size: 1.6rem;
+    }
+
+    .prefix {
+      padding: 0.5rem $terminal-padding-x 0 $terminal-padding-x;
+      color: lighten($dark-gray, 10%);
+    }
+
+    [class*='CodeBlock-module_code'] {
+      word-break: break-word;
+      padding: 0.5rem $terminal-padding-x 1rem $terminal-padding-x;
+    }
+
+    [class*='CodeBlock-module_lineNumbers'] {
+      display: none;
+    }
+  }
+
+
+}
+
+// Toast
+.Toastify__toast-container {
+  top: 7 * $unit;
+  right: 6.5* $unit;
+}
+
+.toast__background {
+  background: $white;
+}
+
+.toast__link {
+  color: $white;
+  text-decoration: underline;
+}
+
+.Toastify__toast--error.toast__background {
+  background: $red800;
+}
+
+.toast__body {
+  color: $black1000;
+  font-size: 2 * $unit;
+  white-space: pre-line;
+  padding-left: $unit;
+}
+
+.Toastify__toast--error > .toast__body {
+  color: $white;
+}
