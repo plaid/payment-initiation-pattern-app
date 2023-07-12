@@ -17,8 +17,8 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
 
 1. Clone the repo.
     ```shell
-    git clone https://github.com/plaid/pattern-europe.git
-    cd pattern-europe
+    git clone https://github.com/plaid/payment-initiation-pattern-app.git
+    cd payment-initiation-pattern-app
     ```
 1. Create the `.env` file.
     ```shell
