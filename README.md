@@ -9,6 +9,7 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 -   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
+- An [ngrok authtoken](https://dashboard.ngrok.com/get-started/your-authtoken). If you don't already have an ngrok account, you can [sign up for free](https://dashboard.ngrok.com/signup).
 
 ## Getting Started
 
@@ -23,9 +24,11 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     cp .env.template .env
     ```
-   1. Update the `.env` file with your [Plaid API keys][plaid-keys] and, if you are testing OAuth, OAuth redirect uri (in sandbox this is `http://localhost:3002/oauth-link`).
+1. Update the `.env` file with your [Plaid API keys][plaid-keys] and, if you are testing OAuth, OAuth redirect uri (in sandbox this is `http://localhost:3002/oauth-link`).
 
-1. If you have entered an OAuth redirect uri in the .env file, you will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+1. Update the `ngrok.yml` file in the ngrok folder with your [ngrok authtoken](https://dashboard.ngrok.com/get-started/your-authtoken). 
+
+1. If you have entered an optional OAuth redirect uri in the .env file, you will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 1. Verify Payment Initiation is enabled for your client ID through the Plaid Developer Dashboard ([Development](https://dashboard.plaid.com/overview/development), [Sandbox](https://dashboard.plaid.com/overview/sandbox) and [Production](https://dashboard.plaid.com/team/products)). If it is not enabled, contact your Plaid Account Executive or Account Manager to enable your client ID for the Payment Initiation product.
 
@@ -86,13 +89,11 @@ For webhooks to work, the server must be publicly accessible on the internet. Fo
 
 ### Testing OAuth
 
-A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3002/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. You will also need to configure `http://localhost:3002/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3002/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution when using a non-popup OAuth flow, such as when using mobile webviews. To test this flow, you will also need to configure `http://localhost:3002/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
-To test the OAuth flow you may use the Chrome browser to simulate a mobile device.
-Learn how to do this under "Mobile Device Viewport Mode" here:
-https://developer.chrome.com/docs/devtools/device-mode/
+For more details on testing OAuth, see [Testing OAuth](https://plaid.com/docs/link/oauth/#testing-oauth).
 
-If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+If you want to test an OAuth redirect uri in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
 
