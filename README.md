@@ -1,4 +1,5 @@
 # Plaid Pattern Europe - Account Funding
+
 This is an example account funding app that outlines an end-to-end integration with [Plaid][plaid]. This app focusses on the Europe specific Payment Initiation product.
 
 Plaid Pattern apps are provided for illustrative purposes and are not meant to be run as production applications.
@@ -7,41 +8,43 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 ## Requirements
 
--   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
--   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
+- [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
+- [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 
 ## Getting Started
 
 Note: We recommend running these commands in a unix terminal. Windows users can use a [WSL][wsl] terminal to access libraries like `make`.
 
 1. Clone the repo.
-    ```shell
-    git clone https://github.com/plaid/payment-initiation-pattern-app.git
-    cd payment-initiation-pattern-app
-    ```
+   ```shell
+   git clone https://github.com/plaid/payment-initiation-pattern-app.git
+   cd payment-initiation-pattern-app
+   ```
 1. Create the `.env` file.
-    ```shell
-    cp .env.template .env
-    ```
+
+   ```shell
+   cp .env.template .env
+   ```
+
    1. Update the `.env` file with your [Plaid API keys][plaid-keys] and, if you are testing OAuth, OAuth redirect uri (in sandbox this is `http://localhost:3002/oauth-link`).
 
 1. If you have entered an OAuth redirect uri in the .env file, you will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
-1. Verify Payment Initiation is enabled for your client ID through the Plaid Developer Dashboard ([Development](https://dashboard.plaid.com/overview/development), [Sandbox](https://dashboard.plaid.com/overview/sandbox) and [Production](https://dashboard.plaid.com/team/products)). If it is not enabled, contact your Plaid Account Executive or Account Manager to enable your client ID for the Payment Initiation product.
+1. Verify Payment Initiation is enabled for your client ID through the Plaid Developer Dashboard in [Sandbox](https://dashboard.plaid.com/overview/sandbox) and/or [Production](https://dashboard.plaid.com/team/products)). If it is not enabled, contact your Plaid Account Executive or Account Manager to enable your client ID for the Payment Initiation product.
 
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
-    ```shell
-    make start
-    ```
+   ```shell
+   make start
+   ```
 1. Open http://localhost:3002 in a web browser.
 1. View the logs
-    ```shell
-    make logs
-    ```
+   ```shell
+   make logs
+   ```
 1. When you're finished, stop the services.
-    ```shell
-    make stop
-    ```
+   ```shell
+   make stop
+   ```
 
 ## Additional Commands
 
@@ -51,10 +54,10 @@ All available commands can be seen by calling `make help`.
 
 As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
 
--   [`client`][client-readme] runs a [React]-based single-page web frontend
--   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
--   [`database`][database-readme] runs a [PostgreSQL][postgres] database
--   [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
+- [`client`][client-readme] runs a [React]-based single-page web frontend
+- [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
+- [`database`][database-readme] runs a [PostgreSQL][postgres] database
+- [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
 
 We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.
 
@@ -92,7 +95,7 @@ To test the OAuth flow you may use the Chrome browser to simulate a mobile devic
 Learn how to do this under "Mobile Device Viewport Mode" here:
 https://developer.chrome.com/docs/devtools/device-mode/
 
-If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+If you want to test OAuth in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
 
@@ -200,7 +203,7 @@ See the [create.sql][create-script] initialization script to see some brief note
 
 ## Learn More
 
--   [PostgreSQL documentation][postgres-docs]
+- [PostgreSQL documentation][postgres-docs]
 
 # Plaid Pattern Europe - ngrok
 
@@ -212,7 +215,7 @@ Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok 
 
 Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
 
-ngrok's free account has a session limit of 2 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the development environment.
+ngrok's free account has a session limit of 2 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
 
 ## Source
 
@@ -220,8 +223,8 @@ This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker
 
 ## Learn More
 
--   https://hub.docker.com/r/wernight/ngrok/dockerfile
--   https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
+- https://hub.docker.com/r/wernight/ngrok/dockerfile
+- https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
 
 ## Troubleshooting
 
@@ -229,10 +232,10 @@ See [`docs/troubleshooting.md`][troubleshooting].
 
 ## Additional Resources
 
--   For an overview of the Plaid platform and products, refer to this [Quickstart guide][plaid-quickstart].
--   Check out this [introduction to Payment Initiation](https://plaid.com/docs/payment-initiation/).
--   Find comprehensive information on Plaid API endpoints in the [API documentation][plaid-docs].
--   Questions? Please head to the [Help Center][plaid-help] or [open a Support ticket][plaid-support-ticket].
+- For an overview of the Plaid platform and products, refer to this [Quickstart guide][plaid-quickstart].
+- Check out this [introduction to Payment Initiation](https://plaid.com/docs/payment-initiation/).
+- Find comprehensive information on Plaid API endpoints in the [API documentation][plaid-docs].
+- Questions? Please head to the [Help Center][plaid-help] or [open a Support ticket][plaid-support-ticket].
 
 ## License
 
