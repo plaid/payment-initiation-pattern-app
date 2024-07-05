@@ -228,7 +228,13 @@ This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker
 
 ## Troubleshooting
 
-See [`docs/troubleshooting.md`][troubleshooting].
+View the logs with the following Docker command:
+
+```shell
+make logs
+```
+
+View [Plaid server logs](https://dashboard.plaid.com/developers/logs) on the Dashboard.
 
 ## Additional Resources
 
@@ -278,5 +284,4 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [postgres]: https://www.postgresql.org/
 [react]: http://reactjs.org/
 [server-readme]: #plaid-pattern---server
-[troubleshooting]: docs/troubleshooting.md
 [wsl]: https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
