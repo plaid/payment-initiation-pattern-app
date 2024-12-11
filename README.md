@@ -10,6 +10,7 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 - [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
 - [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
+- [Sign up for a free ngrok account](https://dashboard.ngrok.com/signup) to obtain an authtoken
 
 ## Getting Started
 
@@ -29,6 +30,8 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
    1. Update the `.env` file with your [Plaid API keys][plaid-keys] and, if you are testing OAuth, OAuth redirect uri (in sandbox this is `http://localhost:3002/oauth-link`).
 
 1. If you have entered an OAuth redirect uri in the .env file, you will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+
+1. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken.
 
 1. Verify Payment Initiation is enabled for your client ID through the Plaid Developer Dashboard in [Sandbox](https://dashboard.plaid.com/overview/sandbox) and/or [Production](https://dashboard.plaid.com/team/products)). If it is not enabled, contact your Plaid Account Executive or Account Manager to enable your client ID for the Payment Initiation product.
 
