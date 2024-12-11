@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-import { useCurrentUser } from '../services';
-import useTerminal from '../services/terminal';
+import useCurrentUser from '../services/currentUser.tsx';
+import useTerminal from '../services/terminal.tsx';
 
 const io = require('socket.io-client');
 const { REACT_APP_SERVER_PORT } = process.env;

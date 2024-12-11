@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Link from './Link';
+import Link from './Link.tsx';
 import { useHistory } from 'react-router-dom';
-import { getUserLinkToken } from '../services/api';
-import { useCurrentUser } from '../services';
+import { getUserLinkToken } from '../services/api.tsx';
+import useCurrentUser from '../services/currentUser.tsx';
 import { LoadingSpinner } from 'plaid-threads';
 
 interface Props {}

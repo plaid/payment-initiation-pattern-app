@@ -2,8 +2,8 @@ import React from 'react';
 import { AccountType } from './types';
 import { Box } from 'plaid-threads';
 import Accordion from 'plaid-threads/Accordion';
-import Order from './Order';
-import { currencyFormatter } from './util';
+import Order from './Order.tsx';
+import { currencyFormatter } from './util.tsx';
 
 interface Props {
   account: AccountType;

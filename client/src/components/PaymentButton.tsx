@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from 'plaid-threads';
-import { createPaymentAndLinkToken } from '../services/api';
+import { createPaymentAndLinkToken } from '../services/api.tsx';
 import { toast } from 'react-toastify';
-import Link from './Link';
-import useTerminal from '../services/terminal';
+import Link from './Link.tsx';
+import useTerminal from '../services/terminal.tsx';
 
 interface Props {
   accountId: number;

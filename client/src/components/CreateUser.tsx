@@ -3,10 +3,10 @@ import Button from 'plaid-threads/Button';
 
 import ModalBody from 'plaid-threads/ModalBody';
 import Modal from 'plaid-threads/Modal';
-import { useCurrentUser } from '../services';
+import useCurrentUser from '../services/currentUser.tsx';
 import TextInput from 'plaid-threads/TextInput';
 import { toast } from 'react-toastify';
-import { addNewUser } from '../services/api';
+import { addNewUser } from '../services/api.tsx';
 const CreateUser: React.FC = () => {
   const [showModal, setShowModalModal] = useState(false);
   const [username, setUsername] = useState('');

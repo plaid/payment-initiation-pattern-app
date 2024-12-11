@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import { getUserById as apiGetUserById, loginUser } from './api';
+import { getUserById as apiGetUserById, loginUser } from './api.tsx';
 import { UserType } from '../components/types';
 
 interface CurrentUserState {

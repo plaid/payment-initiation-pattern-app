@@ -4,10 +4,10 @@ import NavigationLink from 'plaid-threads/NavigationLink';
 
 import { Box, Column, Grid, LoadingSpinner, Select } from 'plaid-threads';
 import { NumberInput } from 'plaid-threads/NumberInput';
-import PaymentButton from './PaymentButton';
-import { useCurrentUser } from '../services';
-import Account from './Account';
-import { currencyFormatter } from './util';
+import PaymentButton from './PaymentButton.tsx';
+import useCurrentUser from '../services/currentUser.tsx';
+import Account from './Account.tsx';
+import { currencyFormatter } from './util.tsx';
 
 const Profile: React.FC = () => {
   const { state } = useCurrentUser();
