@@ -6,7 +6,7 @@ import {
   usePlaidLink,
 } from 'react-plaid-link';
 import { PlaidLinkOnSuccess } from 'react-plaid-link/src/types';
-import useTerminal from '../services/terminal';
+import useTerminal from '../services/terminal.tsx';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 

@@ -3,17 +3,17 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import { CurrentUserProvider } from './services/currentUser';
-import { TerminalProvider } from './services/terminal';
+import { CurrentUserProvider } from './services/currentUser.tsx';
+import { TerminalProvider } from './services/terminal.tsx';
 
 import './App.scss';
 import Button from 'plaid-threads/Button';
 import { Learn } from 'plaid-threads';
-import Sockets from './components/Sockets';
-import Landing from './components/Landing';
-import Profile from './components/Profile';
-import TerminalWindow from './components/TerminalWindow';
-import OAuth from './components/OAuth';
+import Sockets from './components/Sockets.jsx';
+import Landing from './components/Landing.tsx';
+import Profile from './components/Profile.tsx';
+import TerminalWindow from './components/TerminalWindow.tsx';
+import OAuth from './components/OAuth.tsx';
 
 function App() {
   toast.configure({

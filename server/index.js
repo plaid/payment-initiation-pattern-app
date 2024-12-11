@@ -28,7 +28,16 @@ const server = app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
 
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3002",
+    methods: ["*"], 
+    allowedHeaders: ["*"],
+    credentials: true, 
+  },
+  allowEIO3: true
+});
+
 // middleware to pass socket to each request object
 app.use((req, res, next) => {
   req.io = io;

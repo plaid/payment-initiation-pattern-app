@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, CodeBlockHighlighted } from 'plaid-threads';
-import { useTerminal } from '../services';
+import useTerminal from '../services/terminal.tsx';
 
 interface Props {}
 

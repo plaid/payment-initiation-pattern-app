@@ -2,8 +2,8 @@ import React from 'react';
 import Button from 'plaid-threads/Button';
 import { useHistory } from 'react-router-dom';
 
-import CreateUser from './CreateUser';
-import Login from './Login';
+import CreateUser from './CreateUser.tsx';
+import Login from './Login.tsx';
 import { Box, InlineLink } from 'plaid-threads';
 import { useCurrentUser } from '../services';
 

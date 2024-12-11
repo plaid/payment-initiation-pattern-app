@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@hapi/boom": "^7.4.2",
-    "axios": "^0.26.1",
+    "axios": "^1.7.4",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
@@ -19,8 +19,8 @@
     "node-fetch": "^2.3.0",
     "pg": "^8.7.1",
     "pg-format": "^1.0.4",
-    "plaid": "^12.1.0",
-    "socket.io": "^2.2.0"
+    "plaid": "^30.0.0",
+    "socket.io": "4.8.1"
   },
   "devDependencies": {
     "eslint": "^6.2.1",
