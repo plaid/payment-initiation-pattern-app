@@ -78,8 +78,8 @@ router.post(
      */
     const linkTokenCreateResponse = await plaid.linkTokenCreate({
       client_name: COMPANY_NAME,
-      language: 'en', // Supported languages: https://plaid.com/docs/api/tokens/#link-token-create-request-language
-      country_codes: ['GB', 'DE', 'NL'], // Supported countries: https://plaid.com/docs/api/tokens/#link-token-create-request-country-codes
+      language: 'en', // Supported languages: https://plaid.com/docs/api/link/#link-token-create-request-language
+      country_codes: ['GB', 'DE', 'NL'], // Supported countries: https://plaid.com/docs/api/link/#link-token-create-request-country-codes
       user: {
         client_user_id: `${userId}`,
         /**
