@@ -1,8 +1,6 @@
 # this file overrides docker-compose.yml. the should be run together, e.g.
 #   docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
 
-version: "3.4"
-
 volumes:
   client_node_modules:
   server_node_modules:

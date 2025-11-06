@@ -23,11 +23,11 @@ const errorHandler = (err, req, res, next) => {
   console.log(error);
 
   if (error.response) {
-    error = new Boom(error.response.data.error_message, {
+    error = Boom.boomify(new Error(error.response.data.error_message), {
       statusCode: error.response.status || 500,
     });
   } else {
-    error = new Boom('An unknown error occured', { statusCode: 500 });
+    error = Boom.internal('An unknown error occured');
   }
 
   // handle standard javascript errors.

@@ -33,7 +33,7 @@ const computeBalance = orders => {
 
 const getUserWithRelations = async userId => {
   const user = await retrieveUserById(userId);
-  if (user == null) throw new Boom('User does not exist.', { statusCode: 400 });
+  if (user == null) throw Boom.badRequest('User does not exist.');
 
   const accounts = await retrieveAccountsByUserId(userId);
   const orders = await retrieveOrdersByAccountIds(
@@ -76,7 +76,7 @@ router.post(
     const { username } = req.body;
     const usernameExists = await retrieveUserByUsername(username);
     if (usernameExists)
-      throw new Boom('Username already exists', { statusCode: 409 });
+      throw Boom.conflict('Username already exists');
     const user = await createUser(username);
 
     // create some accounts by default

@@ -21,7 +21,7 @@ router.post(
     const { username } = req.body;
     const user = await retrieveUserByUsername(username);
     if (user == null)
-      throw new Boom('User does not exist.', { statusCode: 400 });
+      throw Boom.badRequest('User does not exist.');
 
     res.json(user);
   })
