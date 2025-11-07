@@ -27,9 +27,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
    cp .env.template .env
    ```
 
-   1. Update the `.env` file with your [Plaid API keys][plaid-keys] and, if you are testing OAuth, OAuth redirect uri (in sandbox this is `http://localhost:3002/oauth-link`).
-
-1. If you have entered an OAuth redirect uri in the .env file, you will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+   1. Update the `.env` file with your [Plaid API keys][plaid-keys].
 
 1. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken.
 
@@ -68,7 +66,7 @@ More information about the individual services is given below.
 
 # Plaid Pattern Europe - Client
 
-The Pattern web client is written in JavaScript using [React]. It presents an example account funding workflow to the user, including an implementation of [OAuth][plaid-oauth]. The app runs on port 3002 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in JavaScript using [React]. It presents an example account funding workflow to the user. The app runs on port 3002 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
 
 ## Key concepts
 
@@ -86,19 +84,84 @@ The application server is written in JavaScript using [Node.js][nodejs] and [Exp
 
 ## Key Concepts
 
-### Using webhooks
+### Using webhooks with ngrok
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. The ngrok session is only valid for 2 hours and the server must be re-started after that.
+This demo includes [ngrok](https://ngrok.com/), a utility that creates a secure tunnel between your local machine and the outside world. We're using it here to expose the local webhooks endpoint to the internet.
 
-### Testing OAuth
+Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard. This will show any traffic that gets routed through the ngrok URL.
 
-A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3002/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. You will also need to configure `http://localhost:3002/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+**Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
 
-To test the OAuth flow you may use the Chrome browser to simulate a mobile device.
-Learn how to do this under "Mobile Device Viewport Mode" here:
-https://developer.chrome.com/docs/devtools/device-mode/
+ngrok's free account has a session limit of 2 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
 
-If you want to test OAuth in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+When your ngrok session expires or when you restart the Docker containers (which creates a new ngrok URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL.
+
+Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
+
+
+# Plaid Pattern Europe - Database
+
+The database is a [PostgreSQL][postgres] instance running inside a Docker container.
+
+Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
+Username and password can be found in [docker-compose.yml][docker-compose].
+
+To clear all the data in the database, enter into the terminal:
+
+```bash
+make clear-db
+```
+
+## Key Concepts
+
+## Tables
+
+The `*.sql` scripts in the `init` directory are used to initialize the database if the data directory is empty (i.e. on first run, after manually clearing the db by running `make clear-db`, or after modifying the scripts in the `init` directory).
+
+See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
+
+## Learn More
+
+- [PostgreSQL documentation][postgres-docs]
+
+
+## Source
+
+This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker.com/r/wernight/ngrok/dockerfile). We've copied it here to allow us to more closely version it and to make changes as needed.
+
+## Learn More
+
+- https://hub.docker.com/r/wernight/ngrok/dockerfile
+- https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
+
+## Troubleshooting
+
+View the logs with the following Docker command:
+
+```shell
+make logs
+```
+
+View [Plaid server logs](https://dashboard.plaid.com/developers/logs) on the Dashboard.
+
+## Debugging
+
+The node debugging port (9229) is exposed locally on port 9229.
+
+If you are using Visual Studio Code as your editor, you can use the `Docker: Attach to Server` launch configuration to interactively debug the server while it's running. See the [VS Code docs][vscode-debugging] for more information.
+
+## Testing with OAuth redirect URIs (optional)
+
+> The sections below are optional: on desktop, OAuth will work without a redirect URI configured. However, using redirect URIs is recommended for best conversion on mobile web, and mandatory when using a Plaid mobile SDK. For more details, see the documentation on [redirect URIs on desktop and mobile web](https://plaid.com/docs/link/oauth/#desktop-web-mobile-web-react-or-webview).
+
+#### In Sandbox
+
+To test with an OAuth redirect URI, in the .env file, set your `PLAID_SANDBOX_REDIRECT_URI` to 'http://localhost:3002/oauth-link' and then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/team/api.
+
+To test the OAuth redirect URI flow you may use the Chrome browser to simulate a mobile device. Learn how to do this under "Mobile Device Viewport Mode" here: https://developer.chrome.com/docs/devtools/device-mode/
+
+#### In Production
+If you want to test OAuth redirect URIs in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`, then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/team/api. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
 
@@ -177,67 +240,6 @@ while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3002)" 
 
 After starting up the Pattern sample app, you can now view it at https://localhost:3002. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
 
-## Debugging
-
-The node debugging port (9229) is exposed locally on port 9229.
-
-If you are using Visual Studio Code as your editor, you can use the `Docker: Attach to Server` launch configuration to interactively debug the server while it's running. See the [VS Code docs][vscode-debugging] for more information.
-
-# Plaid Pattern - Database
-
-The database is a [PostgreSQL][postgres] instance running inside a Docker container.
-
-Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
-Username and password can be found in [docker-compose.yml][docker-compose].
-
-To clear all the data in the database, enter into the terminal:
-
-```bash
-make clear-db
-```
-
-## Key Concepts
-
-## Tables
-
-The `*.sql` scripts in the `init` directory are used to initialize the database if the data directory is empty (i.e. on first run, after manually clearing the db by running `make clear-db`, or after modifying the scripts in the `init` directory).
-
-See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
-
-## Learn More
-
-- [PostgreSQL documentation][postgres-docs]
-
-# Plaid Pattern Europe - ngrok
-
-This demo includes [ngrok](https://ngrok.com/), a utility that creates a secure tunnel between your local machine and the outside world. We're using it here to expose the local webhooks endpoint to the internet.
-
-Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard. This will show any traffic that gets routed through the ngrok URL.
-
-**Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
-
-Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
-
-ngrok's free account has a session limit of 2 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
-
-## Source
-
-This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker.com/r/wernight/ngrok/dockerfile). We've copied it here to allow us to more closely version it and to make changes as needed.
-
-## Learn More
-
-- https://hub.docker.com/r/wernight/ngrok/dockerfile
-- https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
-
-## Troubleshooting
-
-View the logs with the following Docker command:
-
-```shell
-make logs
-```
-
-View [Plaid server logs](https://dashboard.plaid.com/developers/logs) on the Dashboard.
 
 ## Additional Resources
 

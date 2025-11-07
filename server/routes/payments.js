@@ -103,7 +103,7 @@ router.post(
        * To support these flows and redirect users back to your client application you will need to implement a publicly accessible OAuth endpoint.
        * Read more about Oauth: https://plaid.com/docs/link/oauth/
        */
-      redirect_uri: PLAID_SANDBOX_REDIRECT_URI,
+      ...(PLAID_SANDBOX_REDIRECT_URI && { redirect_uri: PLAID_SANDBOX_REDIRECT_URI }),
       webhook: webhookUrl,
     });
 
