@@ -29,6 +29,9 @@ type CurrentUserAction =
   | {
       type: 'GET';
       user: UserType;
+    }
+  | {
+      type: 'CLEAR';
     };
 
 interface CurrentUserContextShape extends CurrentUserState {
@@ -82,7 +85,9 @@ export function CurrentUserProvider(props: any) {
       const getUserResponse = await apiGetUserById(state.userId);
       dispatch({ type: 'GET', user: getUserResponse.data });
     } catch (err: any) {
-      toast.error(err.message);
+      // Clear stale session if user no longer exists
+      dispatch({ type: 'CLEAR' });
+      toast.error('Session expired. Please log in again.');
     }
   }, [dispatch, apiGetUserById, state.userId]);
 
@@ -116,6 +121,12 @@ function reducer(state: CurrentUserState, action: CurrentUserAction) {
       return {
         userId: state.userId,
         user: action.user,
+      };
+    case 'CLEAR':
+      localStorage.removeItem('user_id');
+      return {
+        userId: null,
+        user: null,
       };
     default:
       console.warn('unknown action: ', action);
