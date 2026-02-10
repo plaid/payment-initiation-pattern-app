@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@types/jest": "^29.5.14",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "axios": "^1.7.9",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
+    "axios": "^1.13.5",
     "date-fns": "^4.1.0",
     "history": "^4.10.1",
     "plaid": "^41.1.0",
@@ -19,9 +19,9 @@
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "5.0.1",
     "react-toastify": "^5.5.0",
-    "recharts": "^2.15.0",
-    "sass": "^1.93.3",
-    "socket.io-client": "^4.8.1",
+    "recharts": "^2.15.4",
+    "sass": "^1.97.3",
+    "socket.io-client": "^4.8.3",
     "typescript": "^4.9.5"
   },
   "scripts": {
@@ -48,14 +48,14 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.13",
-    "@types/node": "^22.9.3",
+    "@types/lodash": "^4.17.23",
+    "@types/node": "^22.19.11",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-router-hash-link": "^2.4.9",
     "@types/socket.io-client": "^3.0.0",
     "ajv": "^8.17.1",
-    "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3"
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1"
   },
   "overrides": {
     "svgo": {
