@@ -71,7 +71,8 @@ export function CurrentUserProvider(props: any) {
         history.push(`/profile`);
         toast.success(`Successful login. Welcome ${username}.`);
       } catch (err: any) {
-        toast.error(err.message);
+        const errorMessage = err.response?.data?.message || err.message || 'An error occurred during login.';
+        toast.error(errorMessage);
       }
     },
     [dispatch, loginUser, history]

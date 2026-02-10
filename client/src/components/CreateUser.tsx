@@ -20,7 +20,8 @@ const CreateUser: React.FC = () => {
       login(username);
       setShowModalModal(false);
     } catch (err: any) {
-      toast.error(err.message);
+      const errorMessage = err.response?.data?.message || err.message || 'An error occurred while creating user.';
+      toast.error(errorMessage);
     }
   };
 
