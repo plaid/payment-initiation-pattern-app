@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import Button from 'plaid-threads/Button';
 
-import ModalBody from 'plaid-threads/ModalBody';
-import Modal from 'plaid-threads/Modal';
+import Modal from './ui/Modal';
 import useCurrentUser from '../services/currentUser.tsx';
-import TextInput from 'plaid-threads/TextInput';
+import TextInput from './ui/TextInput';
 import { toast } from 'react-toastify';
 import { addNewUser } from '../services/api.tsx';
+
 const CreateUser: React.FC = () => {
   const [showModal, setShowModalModal] = useState(false);
   const [username, setUsername] = useState('');
@@ -20,42 +19,39 @@ const CreateUser: React.FC = () => {
       login(username);
       setShowModalModal(false);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || 'An error occurred while creating user.';
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        'An error occurred while creating user.';
       toast.error(errorMessage);
     }
   };
 
   return (
     <>
-      <Button inline={true} onClick={() => setShowModalModal(true)} centered>
+      <button
+        onClick={() => setShowModalModal(true)}
+        className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-white bg-black-1000 rounded-threads hover:bg-gray-800 transition-colors mr-2"
+      >
         Create User
-      </Button>
+      </button>
       <Modal
         isOpen={showModal}
-        onRequestClose={() => {
+        onClose={() => {
           setShowModalModal(false);
           setUsername('');
         }}
+        header="Create User"
+        isLoading={false}
+        onConfirm={handleSubmit}
+        confirmText="Submit"
       >
-        <>
-          <ModalBody
-            onClickCancel={() => {
-              setShowModalModal(false);
-              setUsername('');
-            }}
-            header="Create User"
-            isLoading={false}
-            onClickConfirm={handleSubmit}
-            confirmText="Submit"
-          >
-            <TextInput
-              id="username"
-              label="Username"
-              onChange={e => setUsername(e.target.value)}
-              value={username}
-            />
-          </ModalBody>
-        </>
+        <TextInput
+          id="username"
+          label="Username"
+          onChange={e => setUsername(e.target.value)}
+          value={username}
+        />
       </Modal>
     </>
   );

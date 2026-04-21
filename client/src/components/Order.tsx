@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { OrderType } from './types';
-import Accordion from 'plaid-threads/Accordion';
+import { AccordionItem } from './ui/Accordion';
 import {
-  AlertError,
-  AlertWarning,
-  Checkmark,
-  Information,
-  Transfer,
-  User,
-  Lock,
-  Box,
-} from 'plaid-threads';
-import { Table } from 'plaid-threads/Table';
+  AlertErrorIcon,
+  AlertWarningIcon,
+  CheckmarkIcon,
+  InformationIcon,
+  TransferIcon,
+  UserIcon,
+  LockIcon,
+} from './ui/icons';
+import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
 
 interface Props {
   initiallyOpen: boolean;
@@ -24,97 +23,93 @@ const Order: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Box borderTop={1} py={2}>
-        <Accordion.Item
+      <div className="border-t border-gray-300 py-[1.6rem]">
+        <AccordionItem
           label={`Order ID: ${order.id}`}
           isExpanded={open}
           onChange={() => setOpen(!open)}
         >
           <Table label="Payment Status Updates">
-            <Table.Head children={[]} />
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell>Account ID</Table.Cell>
-                <Table.Cell>{order.account_id}</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Payment ID</Table.Cell>
-                <Table.Cell>{order.payment_id}</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Payment Reference</Table.Cell>
-                <Table.Cell>{order.payment_reference}</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Payment Executed</Table.Cell>
-                <Table.Cell>
+            <TableHead children={[]} />
+            <TableBody>
+              <TableRow>
+                <TableCell>Account ID</TableCell>
+                <TableCell>{order.account_id}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Payment ID</TableCell>
+                <TableCell>{order.payment_id}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Payment Reference</TableCell>
+                <TableCell>{order.payment_reference}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Payment Executed</TableCell>
+                <TableCell>
                   {order.payment_executed ? 'True' : 'False'}
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Amount</Table.Cell>
-                <Table.Cell>{order.amount}</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Created at</Table.Cell>
-                <Table.Cell>{order.created_at}</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Updated at</Table.Cell>
-                <Table.Cell>{order.updated_at}</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell align="start">Payment Status Updates</Table.Cell>
-                <Table.Cell>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Amount</TableCell>
+                <TableCell>{order.amount}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Created at</TableCell>
+                <TableCell>{order.created_at}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Updated at</TableCell>
+                <TableCell>{order.updated_at}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell align="start">Payment Status Updates</TableCell>
+                <TableCell>
                   <Table label="Payment Status Updates">
-                    <Table.Head children={[]} />
-                    <Table.Body
-                      children={order.payment_status_updates.map(update => (
-                        <Table.Row key={update.id}>
-                          <Table.Cell>
+                    <TableHead children={[]} />
+                    <TableBody>
+                      {order.payment_status_updates.map(update => (
+                        <TableRow key={update.id}>
+                          <TableCell>
                             {renderStatusIcon(update.payment_status)}
-                          </Table.Cell>
-                          <Table.Cell>{update.created_at}</Table.Cell>
-                          <Table.Cell>{update.payment_status}</Table.Cell>
-                        </Table.Row>
+                          </TableCell>
+                          <TableCell>{update.created_at}</TableCell>
+                          <TableCell>{update.payment_status}</TableCell>
+                        </TableRow>
                       ))}
-                    />
+                    </TableBody>
                   </Table>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
+                </TableCell>
+              </TableRow>
+            </TableBody>
           </Table>
-        </Accordion.Item>
-      </Box>
+        </AccordionItem>
+      </div>
     </>
   );
 };
 
 function renderStatusIcon(status: string) {
   status = status.replace('PAYMENT_STATUS_', '');
-  /**
-   * Read more about these payment statuses here:
-   * https://plaid.com/docs/api/products/payment-initiation/#payment_initiation-payment-get-response-status
-   */
   switch (status) {
     case 'EXECUTED':
     case 'SETTLED':
     case 'ESTABLISHED':
-      return <Checkmark className="text--is-success" />;
+      return <CheckmarkIcon className="w-5 h-5 text-green-600" />;
     case 'INPUT_NEEDED':
-      return <User className="text--is-warning" />;
+      return <UserIcon className="w-5 h-5 text-yellow-500" />;
     case 'AUTHORISING':
-      return <Transfer />;
+      return <TransferIcon className="w-5 h-5" />;
     case 'CANCELLED':
-      return <AlertWarning className="text--is-dangerous" />;
+      return <AlertWarningIcon className="w-5 h-5 text-red-800" />;
     case 'FAILED':
     case 'REJECTED':
     case 'INSUFFICIENT_FUNDS':
-      return <AlertError className="text--is-dangerous" />;
+      return <AlertErrorIcon className="w-5 h-5 text-red-800" />;
     case 'BLOCKED':
-      return <Lock className="text--is-dangerous" />;
+      return <LockIcon className="w-5 h-5 text-red-800" />;
     case 'INITIATED':
-      return <Information />;
+      return <InformationIcon className="w-5 h-5" />;
     default:
       return null;
   }

@@ -7,6 +7,9 @@ WORKDIR /opt/client
 
 RUN npm ci
 
+COPY ["tailwind.config.js", "/opt/client/"]
+COPY ["postcss.config.js", "/opt/client/"]
+COPY ["tsconfig.json", "/opt/client/"]
 COPY ["src/", "/opt/client/src/"]
 COPY ["public/", "/opt/client/public/"]
 

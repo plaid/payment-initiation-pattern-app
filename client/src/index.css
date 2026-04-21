@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-mediumitalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-semibolditalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Cern';
+  src: url('./fonts/cern-extrabolditalic.woff2') format('woff2');
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('./fonts/Inconsolata-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('./fonts/Inconsolata-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@layer base {
+  html {
+    font-size: 62.5%; /* 1rem = 10px for easy rem math */
+  }
+  body {
+    @apply m-0 p-0 relative font-sans text-[1.6rem] leading-[2.4rem] text-black-1000;
+  }
+  p, .p {
+    font-size: 1.7rem;
+  }
+  h4 {
+    margin-bottom: 1rem;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}

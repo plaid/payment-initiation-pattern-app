@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import Modal from 'plaid-threads/Modal';
-import ModalBody from 'plaid-threads/ModalBody';
-import Button from 'plaid-threads/Button';
-import TextInput from 'plaid-threads/TextInput';
 
+import Modal from './ui/Modal';
+import TextInput from './ui/TextInput';
 import useCurrentUser from '../services/currentUser.tsx';
 
 const Login: React.FC = () => {
@@ -21,40 +19,29 @@ const Login: React.FC = () => {
     <>
       <Modal
         isOpen={show}
-        onRequestClose={() => {
+        onClose={() => {
           setShow(false);
           setValue('');
         }}
+        header="User Login"
+        isLoading={false}
+        onConfirm={handleSubmit}
+        confirmText="Submit"
       >
-        <>
-          <ModalBody
-            onClickCancel={() => {
-              setShow(false);
-              setValue('');
-            }}
-            header="User Login"
-            isLoading={false}
-            onClickConfirm={handleSubmit}
-            confirmText="Submit"
-          >
-            <TextInput
-              label=""
-              id="username"
-              placeholder="Username"
-              value={value}
-              onChange={e => setValue(e.currentTarget.value)}
-            />
-          </ModalBody>
-        </>
+        <TextInput
+          id="username"
+          label=""
+          placeholder="Username"
+          value={value}
+          onChange={e => setValue(e.currentTarget.value)}
+        />
       </Modal>
-      <Button
-        inline={true}
-        secondary={true}
+      <button
         onClick={() => setShow(!show)}
-        centered
+        className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-black-1000 border border-gray-400 rounded-threads hover:border-blue-900 hover:text-blue-900 transition-colors mr-2"
       >
         Login
-      </Button>
+      </button>
     </>
   );
 };
