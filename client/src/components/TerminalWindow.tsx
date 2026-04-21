@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import json from 'react-syntax-highlighter/dist/cjs/languages/hljs/json';
-import { atomOneDark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-import useTerminal from '../services/terminal.tsx';
+import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 SyntaxHighlighter.registerLanguage('json', json);
+import useTerminal from '../services/terminal.tsx';
 
 interface Props {}
 

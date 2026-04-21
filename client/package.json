@@ -2,10 +2,8 @@
   "name": "client",
   "version": "1.0.7",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@types/jest": "^29.5.14",
-    "@types/react": "^18.3.28",
-    "@types/react-dom": "^18.3.7",
     "@types/react-syntax-highlighter": "^15.5.13",
     "axios": "^1.13.5",
     "date-fns": "^4.1.0",
@@ -17,57 +15,34 @@
     "react-plaid-link": "^4.1.1",
     "react-router-dom": "^5.3.4",
     "react-router-hash-link": "^2.4.3",
-    "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^16.1.1",
     "react-toastify": "^5.5.0",
     "recharts": "^2.15.4",
-    "sass": "^1.97.3",
-    "socket.io-client": "^4.8.3",
-    "typescript": "^4.9.5"
+    "socket.io-client": "^4.8.3"
   },
   "scripts": {
-    "start": "PORT=3002 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src -c .eslintrc --ext js,jsx"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not ie <= 11",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "dev": "vite",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src -c .eslintrc --ext js,jsx,ts,tsx"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.23",
     "@types/node": "^22.19.11",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-router-hash-link": "^2.4.9",
     "@types/socket.io-client": "^3.0.0",
-    "ajv": "^8.17.1",
+    "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.5.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-prettier": "^5.5.5",
     "postcss": "^8.5.10",
     "prettier": "^3.8.1",
-    "tailwindcss": "^3.4.19"
-  },
-  "overrides": {
-    "svgo": {
-      "nth-check": ">=2.0.2"
-    },
-    "react-scripts": {
-      "postcss": ">=8.4.31"
-    }
-  },
-  "proxy": "http://server:5000"
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.6.3",
+    "vite": "^8.0.0"
+  }
 }
