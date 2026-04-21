@@ -1,6 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-black-1000: #111111;
+  --color-dark-gray: rgb(75, 75, 75);
+  --color-plaid-red: #f44e66;
+  --color-plaid-blue: #0072cf;
+  --color-plaid-green: #23d09c;
+  --color-plaid-yellow: #f5a623;
+  --font-sans: 'Cern', 'Helvetica', 'Arial', sans-serif;
+  --font-mono: 'Inconsolata', 'Consolas', 'Courier', monospace;
+  --radius-threads: 0.2rem;
+  --shadow-threads: 0 0.2rem 0.4rem 0 rgba(17, 17, 17, 0.08);
+}
 
 @font-face {
   font-family: 'Cern';
@@ -78,12 +89,10 @@
   }
 }
 
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
     width: 0;
     height: 0;
   }

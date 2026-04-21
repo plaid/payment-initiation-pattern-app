@@ -85,7 +85,7 @@ app.use('/users', usersRouter);
 app.use('/sessions', sessionsRouter);
 app.use('/payments', paymentsRouter);
 app.use('/webhooks', webhooksRouter);
-app.use('*', unhandledRouter);
+app.use('/{*path}', unhandledRouter);
 
 // Error handling has to sit at the bottom of the stack.
 // https://github.com/expressjs/express/issues/2718
