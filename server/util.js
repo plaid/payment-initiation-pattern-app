@@ -14,13 +14,23 @@ const groupBy = function(xs, key) {
 };
 
 const getPublicUrlForBackend = async function() {
-  // Port 4040 matches the port specified in docker-compose.yml
-  const response = await fetch('http://ngrok:4040/api/tunnels');
+  let response;
+  try {
+    response = await fetch('http://localhost:4040/api/tunnels');
+  } catch (e) {
+    throw new Error(
+      'ngrok is not running. Webhooks are required for payment initiation. ' +
+      'Start ngrok in a separate terminal with: ngrok http 5001'
+    );
+  }
+
   const { tunnels } = await response.json();
-
-  console.log(tunnels);
-
   const httpTunnel = tunnels.find(t => t.proto === 'https');
+  if (!httpTunnel) {
+    throw new Error(
+      'No ngrok HTTPS tunnel found. Make sure ngrok is tunneling to port 5001: ngrok http 5001'
+    );
+  }
   return httpTunnel.public_url;
 };
 

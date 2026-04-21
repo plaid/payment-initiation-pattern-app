@@ -22,12 +22,22 @@ const TerminalWindow: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="fixed bottom-[-1px] left-0 right-0 z-[2147483647] rounded-threads shadow-threads lg:w-[56rem] lg:left-auto lg:right-[5.6rem] lg:bottom-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full px-4 py-[1.2rem] text-[1.6rem] font-semibold text-white bg-black-1000 rounded-t-threads hover:bg-gray-800 transition-colors text-left"
-      >
-        Developer Console
-      </button>
+      <div className="flex items-center justify-between px-4 py-[1.2rem] bg-black-1000 rounded-t-threads">
+        <button
+          onClick={() => setOpen(!open)}
+          className="text-[1.6rem] font-semibold text-white hover:text-gray-300 transition-colors text-left"
+        >
+          Developer Console
+        </button>
+        <a
+          href="http://localhost:4040/inspect/http"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[1.2rem] text-blue-400 hover:text-blue-300 underline"
+        >
+          ngrok inspector
+        </a>
+      </div>
       {open ? (
         <div className="bg-black overflow-y-scroll h-[40rem] w-full scrollbar-hide">
           {terminalState.entries.length == 0 ? (

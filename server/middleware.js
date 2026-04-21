@@ -27,8 +27,7 @@ const errorHandler = (err, req, res, next) => {
       statusCode: error.response.status || 500,
     });
   } else if (!error.isBoom) {
-    // Only convert to generic error if it's not already a Boom error
-    error = Boom.internal('An unknown error occured');
+    error = Boom.badImplementation(error.message);
   }
 
   // handle standard javascript errors.

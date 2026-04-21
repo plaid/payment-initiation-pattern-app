@@ -67,7 +67,7 @@ axiosInstance.interceptors.request.use(request => {
 
 axiosInstance.interceptors.response.use(response => {
   io.emit('TERMINAL', {
-    data: JSON.stringify(response.data),
+    data: JSON.stringify(response.data, null, 2),
     source: 'BACKEND',
     type: 'RESPONSE',
     time: Date.now(),

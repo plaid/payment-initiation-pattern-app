@@ -3,8 +3,8 @@
   "version": "1.0.7",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "debug": "nodemon --inspect=0.0.0.0:9229 index.js",
+    "start": "node --env-file=../.env index.js",
+    "debug": "nodemon --env-file=../.env --inspect index.js",
     "lint": "eslint **/*.js -c .eslintrc.json"
   },
   "dependencies": {

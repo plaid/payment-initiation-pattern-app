@@ -65,7 +65,7 @@ router.post(
      * It is not a requirement for integrating with Plaid.
      */
     io.emit('TERMINAL', {
-      data: `${webhookCode}\n${JSON.stringify(request.body)}`,
+      data: `${webhookCode}\n${JSON.stringify(request.body, null, 2)}`,
       source: 'BACKEND',
       type: 'WEBHOOK',
       time: new Date(webhookTimestamp),

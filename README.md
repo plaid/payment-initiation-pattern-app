@@ -8,41 +8,45 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 ## Requirements
 
-- [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
+- [Node.js][nodejs] v20.12 or higher
+- [PostgreSQL][postgres] 16 (install via [Homebrew][homebrew]: `brew install postgresql@16`)
 - [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
-- [Sign up for a free ngrok account](https://dashboard.ngrok.com/signup) to obtain an authtoken
+- (Optional) [ngrok][ngrok] for testing webhooks - [sign up for a free account](https://dashboard.ngrok.com/signup)
 
 ## Getting Started
-
-Note: We recommend running these commands in a unix terminal. Windows users can use a [WSL][wsl] terminal to access libraries like `make`.
 
 1. Clone the repo.
    ```shell
    git clone https://github.com/plaid/payment-initiation-pattern-app.git
    cd payment-initiation-pattern-app
    ```
-1. Create the `.env` file.
 
+1. Create the `.env` file.
    ```shell
    cp .env.template .env
    ```
+   Update the `.env` file with your [Plaid API keys][plaid-keys].
 
-   1. Update the `.env` file with your [Plaid API keys][plaid-keys].
+1. Verify Payment Initiation is enabled for your client ID through the Plaid Developer Dashboard in [Sandbox](https://dashboard.plaid.com/overview/sandbox) and/or [Production](https://dashboard.plaid.com/team/products). If it is not enabled, contact your Plaid Account Executive or Account Manager.
 
-1. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken.
+1. Make sure PostgreSQL is running.
+   ```shell
+   brew services start postgresql@16
+   ```
 
-1. Verify Payment Initiation is enabled for your client ID through the Plaid Developer Dashboard in [Sandbox](https://dashboard.plaid.com/overview/sandbox) and/or [Production](https://dashboard.plaid.com/team/products)). If it is not enabled, contact your Plaid Account Executive or Account Manager to enable your client ID for the Payment Initiation product.
+1. Install dependencies.
+   ```shell
+   make install
+   ```
 
-1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
+1. Start the app.
    ```shell
    make start
    ```
+
 1. Open http://localhost:3002 in a web browser.
-1. View the logs
-   ```shell
-   make logs
-   ```
-1. When you're finished, stop the services.
+
+1. When you're finished, press `Ctrl+C` in the terminal to stop, or run:
    ```shell
    make stop
    ```
@@ -51,195 +55,139 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
 
 All available commands can be seen by calling `make help`.
 
+| Command | Description |
+|---------|-------------|
+| `make install` | Install server and client dependencies |
+| `make start` | Start the server and client (initializes DB on first run) |
+| `make stop` | Stop the server and client |
+| `make sql` | Open an interactive psql session |
+| `make clear-db` | Drop and recreate all database tables |
+
 ## Architecture
 
-As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
+Pattern consists of three components running as local processes:
 
-- [`client`][client-readme] runs a [React]-based single-page web frontend
-- [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
-- [`database`][database-readme] runs a [PostgreSQL][postgres] database
-- [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
+- **client** — a [React][react]-based single-page web frontend served by [Vite][vite] on port 3002
+- **server** — a [Node.js][nodejs] / [Express][express] backend on port 5001
+- **database** — a [PostgreSQL][postgres] instance on port 5432
 
-We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.
+The client proxies API requests to the server via Vite's dev server proxy (configured in `client/vite.config.ts`).
 
-More information about the individual services is given below.
+# Client
 
-# Plaid Pattern Europe - Client
-
-The Pattern web client is written in JavaScript using [React]. It presents an example account funding workflow to the user. The app runs on port 3002 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in TypeScript using [React][react]. It presents an example account funding workflow to the user.
 
 ## Key concepts
 
 ### Communicating with the server
 
-Aside from websocket listeners (see below), all HTTP calls to the Pattern server are defined in `src/services/api.js`.
+All HTTP calls to the Pattern server are defined in `src/services/api.js`.
 
 ### Webhooks and Websockets
 
-The Pattern server is configured to send a message over a websocket whenever it receives a webhook from Plaid. On the client side websocket listeners are defined in `src/components/Sockets.jsx` that wait for these messages and update data in real time accordingly.
+The Pattern server sends a message over a websocket whenever it receives a webhook from Plaid. On the client side, websocket listeners in `src/components/Sockets.jsx` wait for these messages and update data in real time.
 
-# Plaid Pattern Europe - Server
+# Server
 
-The application server is written in JavaScript using [Node.js][nodejs] and [Express][expressjs]. It interacts with the Plaid API via the [Plaid Node SDK][plaid-node], and with the [database][database-readme] using [`node-postgres`][node-pg]. While we've used Node for the reference implementation, the concepts shown here will apply no matter what language your backend is written in.
+The application server is written in JavaScript using [Node.js][nodejs] and [Express][express]. It interacts with the Plaid API via the [Plaid Node SDK][plaid-node], and with the database using [`node-postgres`][node-pg].
 
 ## Key Concepts
 
 ### Using webhooks with ngrok
 
-This demo includes [ngrok](https://ngrok.com/), a utility that creates a secure tunnel between your local machine and the outside world. We're using it here to expose the local webhooks endpoint to the internet.
+To receive Plaid webhooks during local development, you can use [ngrok][ngrok] to expose your local server to the internet:
 
-Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard. This will show any traffic that gets routed through the ngrok URL.
+```shell
+brew install ngrok
+ngrok http 5001
+```
 
-**Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
+Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard and inspect raw webhook payloads. This link is also available in the app's Developer Console.
 
-ngrok's free account has a session limit of 2 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
+**Do NOT use ngrok in production!** It's only included here as a convenience for local development.
 
-When your ngrok session expires or when you restart the Docker containers (which creates a new ngrok URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL.
+ngrok's free account has a session limit of 2 hours. When your session expires, any previously linked Items will stop receiving webhooks because they're registered with the old ngrok URL.
 
-Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
+Don't want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
 
+# Database
 
-# Plaid Pattern Europe - Database
+The database is a [PostgreSQL][postgres] instance running locally on port 5432.
 
-The database is a [PostgreSQL][postgres] instance running inside a Docker container.
+Username and password are configured in your `.env` file (defaults: `postgres` / `password`).
 
-Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
-Username and password can be found in [docker-compose.yml][docker-compose].
-
-To clear all the data in the database, enter into the terminal:
+To clear all the data in the database:
 
 ```bash
 make clear-db
 ```
 
-## Key Concepts
-
 ## Tables
 
-The `*.sql` scripts in the `init` directory are used to initialize the database if the data directory is empty (i.e. on first run, after manually clearing the db by running `make clear-db`, or after modifying the scripts in the `init` directory).
+The `*.sql` scripts in the `database/init` directory define the database schema. See the [create.sql][create-script] initialization script for table schemas.
 
-See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
-
-## Learn More
-
-- [PostgreSQL documentation][postgres-docs]
-
-
-## Source
-
-This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker.com/r/wernight/ngrok/dockerfile). We've copied it here to allow us to more closely version it and to make changes as needed.
-
-## Learn More
-
-- https://hub.docker.com/r/wernight/ngrok/dockerfile
-- https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
+The database is automatically initialized on the first `make start` if the tables don't exist yet.
 
 ## Troubleshooting
 
-View the logs with the following Docker command:
+**Port already in use**: Check what's using the port with `lsof -i :5001` and either stop that process or change the `PORT` in your `.env` file.
 
-```shell
-make logs
-```
+**PostgreSQL connection refused**: Make sure PostgreSQL is running (`brew services list`). If you installed it via Homebrew, start it with `brew services start postgresql@16`.
+
+**Database authentication errors**: The default `.env` uses `postgres` / `password`. If your local PostgreSQL has different credentials, update your `.env` file accordingly.
 
 View [Plaid server logs](https://dashboard.plaid.com/developers/logs) on the Dashboard.
 
 ## Debugging
 
-The node debugging port (9229) is exposed locally on port 9229.
+To run the server with the Node.js inspector:
 
-If you are using Visual Studio Code as your editor, you can use the `Docker: Attach to Server` launch configuration to interactively debug the server while it's running. See the [VS Code docs][vscode-debugging] for more information.
+```shell
+cd server
+npx nodemon --env-file=../.env --inspect index.js
+```
+
+Then attach your debugger to port 9229. In VS Code, use a "Node.js: Attach" launch configuration. See the [VS Code docs][vscode-debugging] for more information.
 
 ## Testing with OAuth redirect URIs (optional)
 
-> The sections below are optional: on desktop, OAuth will work without a redirect URI configured. However, using redirect URIs is recommended for best conversion on mobile web, and mandatory when using a Plaid mobile SDK. For more details, see the documentation on [redirect URIs on desktop and mobile web](https://plaid.com/docs/link/oauth/#desktop-web-mobile-web-react-or-webview).
+> On desktop, OAuth will work without a redirect URI configured. However, using redirect URIs is recommended for best conversion on mobile web, and mandatory when using a Plaid mobile SDK. For more details, see the documentation on [redirect URIs on desktop and mobile web](https://plaid.com/docs/link/oauth/#desktop-web-mobile-web-react-or-webview).
 
 #### In Sandbox
 
-To test with an OAuth redirect URI, in the .env file, set your `PLAID_SANDBOX_REDIRECT_URI` to 'http://localhost:3002/oauth-link' and then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/team/api.
+Set `PLAID_SANDBOX_REDIRECT_URI=http://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/team/api).
 
 To test the OAuth redirect URI flow you may use the Chrome browser to simulate a mobile device. Learn how to do this under "Mobile Device Viewport Mode" here: https://developer.chrome.com/docs/devtools/device-mode/
 
 #### In Production
-If you want to test OAuth redirect URIs in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in `.env`, then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/team/api. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
-#### MacOS instructions for using https with localhost
+When running in Production, you must use an https:// URL. Set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/team/api).
 
-If you are using MacOS, in your terminal, change to the client folder:
+To run localhost with https, create a self-signed certificate. Note that self-signed certificates should be used for testing purposes only.
+
+#### macOS instructions for https with localhost
 
 ```bash
 cd client
-```
-
-Use homebrew to install mkcert:
-
-```bash
 brew install mkcert
-```
-
-Then create your certificate for localhost:
-
-```bash
 mkcert -install
 mkcert localhost
 ```
 
-This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
+This creates `localhost.pem` and `localhost-key.pem` in the client folder. Then update `client/vite.config.ts` to add HTTPS configuration to the server options:
 
-Then in the package.json file in the client folder, replace this line on line 26
-
-```bash
-"start": "PORT=3002 react-scripts start",
+```typescript
+server: {
+  port: 3002,
+  https: {
+    key: './localhost-key.pem',
+    cert: './localhost.pem',
+  },
+  // ... proxy config
+}
 ```
 
-with this line instead:
-
-```bash
-"start": "PORT=3002 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
-```
-
-Finally, in the wait-for-client.sh file in the server folder, replace this line on line 6
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3002)" != "200" ]
-```
-
-with this line instead:
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3002)" != "200" ]
-```
-
-After starting up the Pattern sample app, you can now view it at https://localhost:3002.
-
-#### Windows instructions for using https with localhost
-
-If you are on a Windows machine, in the package.json file in the client folder, replace this line on line 26
-
-```bash
-"start": "PORT=3002 react-scripts start",
-```
-
-with this line instead:
-
-```bash
-"start": "PORT=3002 HTTPS=true react-scripts start",
-```
-
-Then, in the wait-for-client.sh file in the server folder, replace this line on line 6
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3002)" != "200" ]
-```
-
-with this line instead:
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3002)" != "200" ]
-```
-
-After starting up the Pattern sample app, you can now view it at https://localhost:3002. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
-
+After restarting, visit https://localhost:3002.
 
 ## Additional Resources
 
@@ -253,40 +201,21 @@ After starting up the Pattern sample app, you can now view it at https://localho
 Plaid Pattern is a demo app that is intended to be used only for the purpose of demonstrating how you can integrate with Plaid. You are solely responsible for ensuring the correctness, legality, security, privacy, and compliance of your own app and Plaid integration. The Pattern code is licensed under the [MIT License](LICENSE) and is provided as-is and without warranty of any kind. Plaid Pattern is provided for demonstration purposes only and is not intended for use in production environments.
 
 [create-script]: database/init/create.sql
-[docker-compose]: ./docker-compose.yml
-[plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
-[plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
-[postgres]: https://www.postgresql.org/
-[postgres-docs]: https://www.postgresql.org/docs/
-[cra]: https://github.com/facebook/create-react-app
-[plaid-link]: https://plaid.com/docs/#integrating-with-link
-[plaid-oauth]: https://plaid.com/docs/link/oauth/#introduction-to-oauth
-[react]: https://reactjs.org/
-[database-readme]: #plaid-pattern---database
-[expressjs]: http://expressjs.com/
-[ngrok-readme]: #plaid-pattern---ngrok
+[client-img]: docs/client.png
+[express]: https://expressjs.com/
+[homebrew]: https://brew.sh/
+[ngrok]: https://ngrok.com/
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
-[plaid-node]: https://github.com/plaid/plaid-node
-[users-routes]: /server/routes/users.js
-[vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
-[client-img]: docs/client.png
-[client-readme]: #plaid-pattern---client
-[docker]: https://docs.docker.com/
-[docker-compose]: https://docs.docker.com/compose/
-[express]: https://expressjs.com/
-[ngrok]: https://ngrok.com/
-[nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
-[plaid-dashboard]: https://dashboard.plaid.com/team/api
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
 [plaid-keys]: https://dashboard.plaid.com/account/keys
+[plaid-node]: https://github.com/plaid/plaid-node
 [plaid-quickstart]: https://plaid.com/docs/quickstart/
 [plaid-signup]: https://dashboard.plaid.com/signup
 [plaid-support-ticket]: https://dashboard.plaid.com/support/new
-[plaid-redirect-uri]: https://plaid.com/docs/link/oauth/#redirect-uri-configuration
 [postgres]: https://www.postgresql.org/
-[react]: http://reactjs.org/
-[server-readme]: #plaid-pattern---server
-[wsl]: https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
+[react]: https://reactjs.org/
+[vite]: https://vite.dev/
+[vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging

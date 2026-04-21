@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  envDir: '..',
   css: {
     transformer: 'postcss',
   },
@@ -10,13 +11,12 @@ export default defineConfig({
     cssMinify: false,
   },
   server: {
-    host: '0.0.0.0',
     port: 3002,
     proxy: {
-      '/users': 'http://server:5000',
-      '/sessions': 'http://server:5000',
-      '/payments': 'http://server:5000',
-      '/webhooks': 'http://server:5000',
+      '/users': 'http://localhost:5001',
+      '/sessions': 'http://localhost:5001',
+      '/payments': 'http://localhost:5001',
+      '/webhooks': 'http://localhost:5001',
     },
   },
   preview: {

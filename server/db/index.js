@@ -9,7 +9,7 @@ const { Pool, types } = require('pg');
 // have large currency values, we'll parse them as floats instead.
 types.setTypeParser(1700, val => parseFloat(val));
 
-// These environment variables are set in the repo root's docker-compose.yml
+// These environment variables are set in the repo root's .env file
 const { DB_PORT, DB_HOST_NAME, POSTGRES_USER, POSTGRES_PASSWORD } = process.env;
 
 // Create a connection pool. This generates new connections for every request.
