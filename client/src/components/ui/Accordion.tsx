@@ -24,7 +24,8 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
   <div>
     <button
       onClick={onChange}
-      className="w-full flex items-center justify-between py-3 text-left text-[1.6rem] font-semibold hover:text-blue-900 transition-colors"
+      aria-expanded={isExpanded}
+      className="w-full flex items-center justify-between py-3 text-left text-[1.6rem] font-semibold hover:text-plaid-blue transition-colors"
     >
       <span>{label}</span>
       <svg

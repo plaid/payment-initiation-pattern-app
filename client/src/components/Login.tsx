@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Button from './ui/Button';
 import Modal from './ui/Modal';
 import TextInput from './ui/TextInput';
 import useCurrentUser from '../services/currentUser.tsx';
@@ -36,12 +37,13 @@ const Login: React.FC = () => {
           onChange={e => setValue(e.currentTarget.value)}
         />
       </Modal>
-      <button
+      <Button
+        variant="secondary"
         onClick={() => setShow(!show)}
-        className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-black-1000 border border-gray-400 rounded-threads hover:border-blue-900 hover:text-blue-900 transition-colors mr-2"
+        className="mr-2"
       >
         Login
-      </button>
+      </Button>
     </>
   );
 };

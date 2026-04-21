@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from './ui/Button';
 import { createPaymentAndLinkToken } from '../services/api.tsx';
 import { toast } from 'react-toastify';
 import Link from './Link.tsx';
@@ -39,13 +40,14 @@ const PaymentButton: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <button
+      <Button
         disabled={loading}
         onClick={() => createPayment()}
-        className="w-full flex items-center justify-center px-6 py-[1.2rem] text-[1.6rem] font-semibold text-white bg-black-1000 rounded-threads hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors mt-4"
+        wide
+        className="mt-4"
       >
         {loading ? 'Loading...' : 'Make payment'}
-      </button>
+      </Button>
       {linkToken ? (
         <Link
           token={linkToken}

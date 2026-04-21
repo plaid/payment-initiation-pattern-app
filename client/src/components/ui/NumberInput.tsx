@@ -40,7 +40,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
         inputMode="decimal"
         value={value}
         onChange={onChange}
-        className={`flex-1 border border-gray-400 px-3 focus:outline-none focus:ring-2 focus:ring-blue-900 ${
+        className={`flex-1 border border-gray-400 px-3 focus:outline-none focus:ring-2 focus:ring-plaid-blue ${
           prefix ? 'rounded-r-threads' : 'rounded-threads'
         } ${large ? 'text-[2.4rem] h-14' : 'text-[1.6rem] h-10'}`}
       />

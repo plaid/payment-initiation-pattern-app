@@ -95,19 +95,19 @@ function renderStatusIcon(status: string) {
     case 'EXECUTED':
     case 'SETTLED':
     case 'ESTABLISHED':
-      return <CheckmarkIcon className="w-5 h-5 text-green-600" />;
+      return <CheckmarkIcon className="w-5 h-5 text-plaid-green" />;
     case 'INPUT_NEEDED':
-      return <UserIcon className="w-5 h-5 text-yellow-500" />;
+      return <UserIcon className="w-5 h-5 text-plaid-yellow" />;
     case 'AUTHORISING':
       return <TransferIcon className="w-5 h-5" />;
     case 'CANCELLED':
-      return <AlertWarningIcon className="w-5 h-5 text-red-800" />;
+      return <AlertWarningIcon className="w-5 h-5 text-plaid-red" />;
     case 'FAILED':
     case 'REJECTED':
     case 'INSUFFICIENT_FUNDS':
-      return <AlertErrorIcon className="w-5 h-5 text-red-800" />;
+      return <AlertErrorIcon className="w-5 h-5 text-plaid-red" />;
     case 'BLOCKED':
-      return <LockIcon className="w-5 h-5 text-red-800" />;
+      return <LockIcon className="w-5 h-5 text-plaid-red" />;
     case 'INITIATED':
       return <InformationIcon className="w-5 h-5" />;
     default:

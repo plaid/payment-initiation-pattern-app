@@ -36,7 +36,7 @@ const Select: React.FC<SelectProps> = ({
         const selected = options.find(o => String(o.value) === e.target.value);
         if (selected) onChange(selected);
       }}
-      className="block w-full border border-gray-400 rounded-threads px-3 py-2 text-[1.6rem] bg-white focus:outline-none focus:ring-2 focus:ring-blue-900"
+      className="block w-full border border-gray-400 rounded-threads px-3 py-2 text-[1.6rem] bg-white focus:outline-none focus:ring-2 focus:ring-plaid-blue"
     >
       {options.map(opt => (
         <option key={opt.value} value={opt.value}>

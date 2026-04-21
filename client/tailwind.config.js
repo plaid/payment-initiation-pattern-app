@@ -6,10 +6,10 @@ module.exports = {
       colors: {
         'black-1000': '#111111',
         'dark-gray': 'rgb(75, 75, 75)',
-        'red-800': '#f44e66',
-        'blue-900': '#0072cf',
-        'green-600': '#23d09c',
-        'yellow-500': '#f5a623',
+        'plaid-red': '#f44e66',
+        'plaid-blue': '#0072cf',
+        'plaid-green': '#23d09c',
+        'plaid-yellow': '#f5a623',
       },
       fontFamily: {
         sans: ['Cern', 'Helvetica', 'Arial', 'sans-serif'],

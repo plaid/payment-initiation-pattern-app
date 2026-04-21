@@ -33,7 +33,7 @@ function App() {
             href="https://docs.google.com/forms/d/e/1FAIpQLSfF4Xev5w9RPGr7fNkSHjmtE_dj0ELuHRbDexQ7Tg2xoo6tQg/viewform"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-black-1000 border border-gray-400 rounded-threads hover:border-blue-900 hover:text-blue-900 transition-colors"
+            className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-black-1000 border border-gray-400 rounded-threads hover:border-plaid-blue hover:text-plaid-blue transition-colors"
           >
             <LearnIcon className="w-5 h-5 mr-1" />
             &nbsp; Provide feedback

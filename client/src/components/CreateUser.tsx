@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Button from './ui/Button';
 import Modal from './ui/Modal';
 import useCurrentUser from '../services/currentUser.tsx';
 import TextInput from './ui/TextInput';
@@ -29,12 +30,9 @@ const CreateUser: React.FC = () => {
 
   return (
     <>
-      <button
-        onClick={() => setShowModalModal(true)}
-        className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-white bg-black-1000 rounded-threads hover:bg-gray-800 transition-colors mr-2"
-      >
+      <Button onClick={() => setShowModalModal(true)} className="mr-2">
         Create User
-      </button>
+      </Button>
       <Modal
         isOpen={showModal}
         onClose={() => {

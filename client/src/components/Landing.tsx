@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import Button from './ui/Button';
 import CreateUser from './CreateUser.tsx';
 import Login from './Login.tsx';
 import { useCurrentUser } from '../services';
@@ -28,7 +29,7 @@ const Landing: React.FC = () => {
           target="_blank"
           rel="noopener noreferrer"
           href="https://plaid.com/docs/payment-initiation/user-onboarding-and-account-funding/"
-          className="text-blue-900 underline hover:text-blue-800"
+          className="text-plaid-blue underline hover:text-plaid-blue/80"
         >
           account funding guide
         </a>
@@ -41,12 +42,9 @@ const Landing: React.FC = () => {
         <Login />
 
         {user != null && (
-          <button
-            onClick={returnToCurrentUser}
-            className="inline-flex items-center justify-center px-4 py-[1.2rem] text-[1.6rem] font-semibold text-black-1000 border border-gray-400 rounded-threads hover:border-blue-900 hover:text-blue-900 transition-colors"
-          >
+          <Button variant="secondary" onClick={returnToCurrentUser}>
             Back to "{user.username}"
-          </button>
+          </Button>
         )}
       </div>
     </>

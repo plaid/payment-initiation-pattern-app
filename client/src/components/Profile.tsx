@@ -20,7 +20,7 @@ const Profile: React.FC = () => {
       <>
         <Link
           to="/"
-          className="inline-flex items-center text-blue-900 hover:underline mb-4 text-[1.6rem]"
+          className="inline-flex items-center text-plaid-blue hover:underline mb-4 text-[1.6rem]"
         >
           &larr; Back
         </Link>
@@ -39,7 +39,7 @@ const Profile: React.FC = () => {
     <>
       <Link
         to="/"
-        className="inline-flex items-center text-blue-900 hover:underline mb-4 text-[1.6rem]"
+        className="inline-flex items-center text-plaid-blue hover:underline mb-4 text-[1.6rem]"
       >
         &larr; Back
       </Link>
