@@ -1,10 +1,6 @@
-mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 envfile := ./.env
-clear_db_after_schema_change := database/last-cleared.dummy
-db_schema := database/init/*
 
-.PHONY: help start start-no-webhooks debug sql logs stop clear-db
+.PHONY: help install start stop sql init-db clear-db
 
 # help target adapted from https://gist.github.com/prwhite/8168133#gistcomment-2278355
 TARGET_MAX_CHAR_NUM=20
@@ -26,50 +22,51 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
-## Start the services
-start: $(envfile) $(clear_db_after_schema_change)
-	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker compose pull
-	@echo "Starting Docker services"
-	docker compose up --build --detach
-	./wait-for-client.sh
+## Install dependencies
+install:
+	cd server && npm install
+	cd client && npm install
 
-## Start the services without webhooks
-start-no-webhooks: $(envfile) $(clear_db_after_schema_change)
-	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker compose pull
-	@echo "Starting Docker services"
-	docker compose up --detach client
-	./wait-for-client.sh
+## Start the server and client
+start: $(envfile) init-db
+	@echo ""
+	@echo "Starting server and client..."
+	@echo "  Server: http://localhost:5001"
+	@echo "  Client: http://localhost:3002"
+	@echo ""
+	@trap 'kill 0' INT TERM; \
+	 (cd server && npm start) & \
+	 (cd client && npm start) & \
+	 wait
 
-## Start the services in debug mode
-debug: $(envfile) $(clear_db_after_schema_change)
-	@echo "Starting services (this may take a few minutes if there are any changes)"
-	docker compose -f docker-compose.yml -f docker-compose.debug.yml up --build --detach
-	./wait-for-client.sh
-
-## Start an interactive psql session (services must running)
-sql:
-	docker compose exec db psql -U postgres
-
-## Show the service logs (services must be running)
-logs:
-	docker compose logs --follow
-
-## Stop the services
+## Stop the server and client
 stop:
-	docker compose down
-	docker volume rm $(current_dir)_{client,server}_node_modules 2>/dev/null || true
+	@echo "Stopping server and client..."
+	-@lsof -ti :5001 | xargs kill 2>/dev/null || true
+	-@lsof -ti :3002 | xargs kill 2>/dev/null || true
+	@echo "Stopped."
 
-## Clear the sandbox and development databases
-clear-db: stop
-	docker volume rm $(current_dir)_pg_{sandbox,development}_data 2>/dev/null || true
+## Start an interactive psql session
+sql:
+	psql -U postgres -h localhost -p 5432
+
+## Initialize the database (runs on first start)
+init-db:
+	@psql -U postgres -h localhost -p 5432 -tc \
+	  "SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'users'" \
+	  | grep -q 1 \
+	  || (echo "Initializing database..." && \
+	      psql -U postgres -h localhost -p 5432 -f database/init/create.sql && \
+	      echo "Database initialized.")
+
+## Drop and recreate all tables
+clear-db:
+	@echo "Clearing database..."
+	psql -U postgres -h localhost -p 5432 -c \
+	  "DROP TABLE IF EXISTS payment_status_updates, orders, accounts, users CASCADE;"
+	psql -U postgres -h localhost -p 5432 -f database/init/create.sql
+	@echo "Database cleared and reinitialized."
 
 $(envfile):
-	@echo "Error: .env file does not exist! See the README for instructions."
+	@echo "Error: .env file does not exist! Copy .env.template to .env and fill in your Plaid keys."
 	@exit 1
-
-# Remove local DBs if the DB schema has changed
-$(clear_db_after_schema_change): $(db_schema)
-	@$(MAKE) clear-db
-	@touch $(clear_db_after_schema_change)
