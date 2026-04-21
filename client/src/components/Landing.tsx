@@ -1,10 +1,9 @@
 import React from 'react';
-import Button from 'plaid-threads/Button';
 import { useHistory } from 'react-router-dom';
 
+import Button from './ui/Button';
 import CreateUser from './CreateUser.tsx';
 import Login from './Login.tsx';
-import { Box, InlineLink } from 'plaid-threads';
 import { useCurrentUser } from '../services';
 
 const Landing: React.FC = () => {
@@ -26,26 +25,28 @@ const Landing: React.FC = () => {
       <p>
         To learn more about account funding and the Payment Initiation product,
         see the{' '}
-        <InlineLink
+        <a
           target="_blank"
+          rel="noopener noreferrer"
           href="https://plaid.com/docs/payment-initiation/user-onboarding-and-account-funding/"
+          className="text-plaid-blue underline hover:text-plaid-blue/80"
         >
           account funding guide
-        </InlineLink>
+        </a>
         . The buttons below act as a simplified version of your user onboarding
         flow. If you haven't created a User yet, start by clicking "Create
         User".
       </p>
-      <Box pt={1}>
+      <div className="pt-[0.8rem]">
         <CreateUser />
         <Login />
 
         {user != null && (
-          <Button secondary={true} inline={true} onClick={returnToCurrentUser}>
+          <Button variant="secondary" onClick={returnToCurrentUser}>
             Back to "{user.username}"
           </Button>
         )}
-      </Box>
+      </div>
     </>
   );
 };

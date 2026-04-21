@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import NavigationLink from 'plaid-threads/NavigationLink';
+import { Link } from 'react-router-dom';
 
-import { Box, Column, Grid, LoadingSpinner, Select } from 'plaid-threads';
-import { NumberInput } from 'plaid-threads/NumberInput';
+import Select from './ui/Select';
+import NumberInput from './ui/NumberInput';
+import Spinner from './ui/Spinner';
 import PaymentButton from './PaymentButton.tsx';
 import useCurrentUser from '../services/currentUser.tsx';
 import Account from './Account.tsx';
@@ -18,10 +18,13 @@ const Profile: React.FC = () => {
   if (user == null) {
     return (
       <>
-        <NavigationLink component={Link} to="/">
-          Back
-        </NavigationLink>
-        <LoadingSpinner />
+        <Link
+          to="/"
+          className="inline-flex items-center text-plaid-blue hover:underline mb-4 text-[1.6rem]"
+        >
+          &larr; Back
+        </Link>
+        <Spinner />
       </>
     );
   }
@@ -34,12 +37,15 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <NavigationLink component={Link} to="/">
-        Back
-      </NavigationLink>
+      <Link
+        to="/"
+        className="inline-flex items-center text-plaid-blue hover:underline mb-4 text-[1.6rem]"
+      >
+        &larr; Back
+      </Link>
       <h3>Manage {user.username}'s accounts</h3>
-      <Grid fullWidth={true}>
-        <Column>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
+        <div className="col-span-full">
           <Select
             id="accounts"
             label="Account"
@@ -59,14 +65,14 @@ const Profile: React.FC = () => {
               value: account?.id || 0,
             }}
           />
-        </Column>
+        </div>
         {account ? (
           <>
-            <Column smallOrder={2} large={8}>
+            <div className="order-2 lg:order-none lg:col-span-8">
               <Account account={account} />
-            </Column>
-            <Column smallOrder={1} large={4}>
-              <Box px={3} pb={4} border={1} className="payment-box">
+            </div>
+            <div className="order-1 lg:order-none lg:col-span-4">
+              <div className="px-[2.4rem] pb-[3.2rem] border border-gray-300 rounded-threads">
                 <h4>Fund your account</h4>
                 <p>Choose the amount</p>
                 <NumberInput
@@ -78,11 +84,11 @@ const Profile: React.FC = () => {
                   prefix={() => <>€</>}
                 />
                 <PaymentButton accountId={account.id} amount={Number(amount)} />
-              </Box>
-            </Column>
+              </div>
+            </div>
           </>
         ) : null}
-      </Grid>
+      </div>
     </>
   );
 };

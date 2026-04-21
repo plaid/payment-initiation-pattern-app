@@ -1,0 +1,29 @@
+/* Plaid Link z-index: keep terminal above Link iframe */
+iframe[id*='plaid-link-iframe'] {
+  z-index: 2147483646 !important;
+}
+
+/* Toast overrides */
+.Toastify__toast-container {
+  top: 5.6rem;
+  right: 5.2rem;
+}
+.toast__background {
+  background: #ffffff;
+}
+.toast__link {
+  color: #ffffff;
+  text-decoration: underline;
+}
+.Toastify__toast--error.toast__background {
+  background: #f44e66;
+}
+.toast__body {
+  color: #111111;
+  font-size: 1.6rem;
+  white-space: pre-line;
+  padding-left: 0.8rem;
+}
+.Toastify__toast--error > .toast__body {
+  color: #ffffff;
+}

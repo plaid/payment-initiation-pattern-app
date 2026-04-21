@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from 'plaid-threads';
+import Button from './ui/Button';
 import { createPaymentAndLinkToken } from '../services/api.tsx';
 import { toast } from 'react-toastify';
 import Link from './Link.tsx';
@@ -42,9 +42,9 @@ const PaymentButton: React.FC<Props> = (props: Props) => {
     <>
       <Button
         disabled={loading}
-        centered
         onClick={() => createPayment()}
-        wide={true}
+        wide
+        className="mt-4"
       >
         {loading ? 'Loading...' : 'Make payment'}
       </Button>

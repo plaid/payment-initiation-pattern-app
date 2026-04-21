@@ -3,7 +3,7 @@ import Link from './Link.tsx';
 import { useHistory } from 'react-router-dom';
 import { getUserLinkToken } from '../services/api.tsx';
 import useCurrentUser from '../services/currentUser.tsx';
-import { LoadingSpinner } from 'plaid-threads';
+import Spinner from './ui/Spinner';
 
 interface Props {}
 
@@ -48,7 +48,7 @@ const OAuth: React.FC<Props> = (props: Props) => {
   }, [linkToken, fetchedLinkToken]);
 
   if (!fetchedLinkToken && linkToken == null) {
-    return <LoadingSpinner />;
+    return <Spinner />;
   }
 
   if (linkToken == null) {
