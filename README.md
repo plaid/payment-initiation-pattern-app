@@ -114,7 +114,7 @@ Don't want to use ngrok? As long as you serve the app with an endpoint that is p
 
 The database is a [PostgreSQL][postgres] instance running locally on port 5432.
 
-Username and password are configured in your `.env` file (defaults: `postgres` / `password`).
+The database name is `plaid_payment_initiation`. Username and password are configured in your `.env` file (defaults: `postgres` / `password`). Connect with `psql -U postgres -d plaid_payment_initiation`.
 
 To clear all the data in the database:
 

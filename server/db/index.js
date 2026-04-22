@@ -16,6 +16,7 @@ const { DB_PORT, DB_HOST_NAME, POSTGRES_USER, POSTGRES_PASSWORD } = process.env;
 const db = new Pool({
   host: DB_HOST_NAME,
   port: DB_PORT,
+  database: 'plaid_payment_initiation',
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   max: 5,
