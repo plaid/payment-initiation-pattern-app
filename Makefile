@@ -48,23 +48,24 @@ stop:
 
 ## Start an interactive psql session
 sql:
-	psql -U postgres -h localhost -p 5432
+	psql -U postgres -h localhost -p 5432 -d plaid_payment_initiation
 
 ## Initialize the database (runs on first start)
 init-db:
-	@psql -U postgres -h localhost -p 5432 -tc \
+	@psql -U postgres -h localhost -p 5432 -c 'CREATE DATABASE plaid_payment_initiation' 2>/dev/null; \
+	psql -U postgres -h localhost -p 5432 -d plaid_payment_initiation -tc \
 	  "SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'users'" \
 	  | grep -q 1 \
 	  || (echo "Initializing database..." && \
-	      psql -U postgres -h localhost -p 5432 -f database/init/create.sql && \
+	      psql -U postgres -h localhost -p 5432 -d plaid_payment_initiation -f database/init/create.sql && \
 	      echo "Database initialized.")
 
 ## Drop and recreate all tables
 clear-db:
 	@echo "Clearing database..."
-	psql -U postgres -h localhost -p 5432 -c \
-	  "DROP TABLE IF EXISTS payment_status_updates, orders, accounts, users CASCADE;"
-	psql -U postgres -h localhost -p 5432 -f database/init/create.sql
+	psql -U postgres -h localhost -p 5432 -c 'DROP DATABASE IF EXISTS plaid_payment_initiation'
+	psql -U postgres -h localhost -p 5432 -c 'CREATE DATABASE plaid_payment_initiation'
+	psql -U postgres -h localhost -p 5432 -d plaid_payment_initiation -f database/init/create.sql
 	@echo "Database cleared and reinitialized."
 
 $(envfile):
