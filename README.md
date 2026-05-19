@@ -11,7 +11,7 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 - [Node.js][nodejs] v20.12 or higher
 - [PostgreSQL][postgres] 16 (install via [Homebrew][homebrew]: `brew install postgresql@16`)
 - [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
-- (Optional) [ngrok][ngrok] for testing webhooks - [sign up for a free account](https://dashboard.ngrok.com/signup)
+- [ngrok][ngrok] to expose your local server for Plaid webhooks - [sign up for a free account](https://dashboard.ngrok.com/signup)
 
 ## Getting Started
 
@@ -95,7 +95,7 @@ The application server is written in JavaScript using [Node.js][nodejs] and [Exp
 
 ### Using webhooks with ngrok
 
-To receive Plaid webhooks during local development, you can use [ngrok][ngrok] to expose your local server to the internet:
+The payment initiation flow registers a webhook URL when creating a link token, so the server needs a publicly reachable endpoint before a user can initiate a payment. The server itself starts fine without ngrok, but `POST /payments/create_link_token` will return a 500 and Plaid Link won't open until ngrok is tunneling to port 5001. Start [ngrok][ngrok] in a separate terminal:
 
 ```shell
 brew install ngrok
@@ -108,7 +108,7 @@ Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok 
 
 ngrok's free account has a session limit of 2 hours. When your session expires, any previously linked Items will stop receiving webhooks because they're registered with the old ngrok URL.
 
-Don't want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
+Prefer a different tunneling tool? Any setup that exposes the server on port 5001 over HTTPS will work, as long as it's also reachable at `http://localhost:4040/api/tunnels` (the endpoint `server/util.js` queries to discover the public URL).
 
 # Database
 
