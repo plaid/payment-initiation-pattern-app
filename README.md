@@ -1,6 +1,6 @@
 # Plaid Pattern Europe - Account Funding
 
-This is an example account funding app that outlines an end-to-end integration with [Plaid][plaid]. This app focusses on the Europe specific Payment Initiation product.
+This is an example account funding app that outlines an end-to-end integration with [Plaid][plaid]. This app focusses on the Europe-specific Payment Initiation product.
 
 Plaid Pattern apps are provided for illustrative purposes and are not meant to be run as production applications.
 
