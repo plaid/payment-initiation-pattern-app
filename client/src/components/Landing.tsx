@@ -28,7 +28,7 @@ const Landing: React.FC = () => {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://plaid.com/docs/payment-initiation/user-onboarding-and-account-funding/"
+          href="https://plaid.com/docs/payment-initiation/"
           className="text-plaid-blue underline hover:text-plaid-blue/80"
         >
           account funding guide
