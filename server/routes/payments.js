@@ -74,7 +74,7 @@ router.post(
 
     /**
      * Read more about the link/token/create endpoint:
-     * https://plaid.com/docs/api/tokens/#linktokencreate
+     * https://plaid.com/docs/api/link/#linktokencreate
      */
     const linkTokenCreateResponse = await plaid.linkTokenCreate({
       client_name: COMPANY_NAME,
