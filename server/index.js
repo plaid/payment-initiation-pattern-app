@@ -5,7 +5,6 @@
 const socketIo = require('socket.io');
 
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const { errorHandler } = require('./middleware');
@@ -77,9 +76,19 @@ axiosInstance.interceptors.response.use(response => {
 });
 
 app.use(logger('dev'));
-app.use(express.json());
+/**
+ * Webhook verification needs the exact bytes Plaid signed, not the parsed-then-
+ * reserialized body, so we stash the raw buffer alongside req.body here rather
+ * than re-deriving it later.
+ */
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 app.use('/users', usersRouter);
 app.use('/sessions', sessionsRouter);
