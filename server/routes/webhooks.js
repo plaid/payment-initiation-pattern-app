@@ -1,4 +1,5 @@
 const express = require('express');
+const Boom = require('@hapi/boom');
 
 const router = express.Router();
 
@@ -7,6 +8,7 @@ const {
   createPaymentStatusUpdate,
   markOrderExecutedByPaymentId,
 } = require('../db/queries');
+const { verifyWebhook } = require('../webhookVerification');
 
 /**
  * Handles incoming webhooks from Plaid. Read more about webhooks:
@@ -15,6 +17,29 @@ const {
 router.post(
   '/',
   asyncWrapper(async (request, response) => {
+    /**
+     * PAYMENT_STATUS_UPDATE webhooks are what tell us a payment reached
+     * PAYMENT_STATUS_EXECUTED, which we treat as authorization to release
+     * funds (see markOrderExecutedByPaymentId below). Since that's a real
+     * side effect, we only trust the body once we've confirmed Plaid signed
+     * it - otherwise this endpoint would let anyone forge that webhook and
+     * mark a payment executed without any money moving.
+     *
+     * An alternative to verifying the JWT: don't trust the webhook body's
+     * fields at all. Treat the webhook purely as a "something changed, go
+     * check" notification, then call paymentInitiationPaymentGet({ payment_id })
+     * and read new_payment_status from that response instead of from
+     * request.body.
+     */
+    try {
+      await verifyWebhook(
+        request.rawBody,
+        request.headers['plaid-verification']
+      );
+    } catch (err) {
+      throw Boom.unauthorized(`Webhook verification failed: ${err.message}`);
+    }
+
     const {
       webhook_code: webhookCode,
       timestamp: webhookTimestamp,

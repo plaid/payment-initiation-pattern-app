@@ -3,6 +3,7 @@
  */
 
 const express = require('express');
+const Boom = require('@hapi/boom');
 const { asyncWrapper } = require('../middleware');
 const { plaid } = require('../plaid');
 const { getPublicUrlForBackend } = require('../util');
@@ -16,6 +17,36 @@ const router = express.Router();
 const userIdToLinkTokenMapping = new Map();
 
 /**
+ * The recipient in this demo is a single fixed beneficiary account, so its
+ * details never change between payments. Calling paymentInitiationRecipientCreate
+ * on every payment would just create a redundant recipient for the same
+ * beneficiary each time, so we create it once and reuse the resulting
+ * recipient_id. A real integration would persist this in its database rather
+ * than in memory.
+ */
+let recipientIdPromise = null;
+const getOrCreateRecipientId = () => {
+  if (recipientIdPromise == null) {
+    /**
+     * Read more about the payment_initiation/recipient/create endpoint:
+     * https://plaid.com/docs/api/products/payment-initiation/#payment_initiationrecipientcreate
+     */
+    recipientIdPromise = plaid
+      .paymentInitiationRecipientCreate({
+        name: COMPANY_NAME, // The beneficiary of the bank account. This will be displayed on the Link UI.
+        iban: 'NL06INGB5632579034', // non-existent example IBAN. In the UK provide "bacs" instead.
+      })
+      .then(response => response.data.recipient_id)
+      .catch(err => {
+        // Allow a later request to retry creating the recipient if this attempt failed.
+        recipientIdPromise = null;
+        throw err;
+      });
+  }
+  return recipientIdPromise;
+};
+
+/**
  * @desc This endpoint creates the resources required to initiate a payment with Plaid. It returns a link token which is used by the client to initiate Link.
  * This endpoint also creates a payment "order" which is used to manage payment reconciliation.
  */
@@ -24,20 +55,21 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { amount, accountId } = req.body;
 
+    if (!Number.isInteger(accountId) || accountId <= 0) {
+      throw Boom.badRequest('accountId must be a positive integer.');
+    }
+    if (typeof amount !== 'number' || !Number.isFinite(amount) || amount <= 0) {
+      throw Boom.badRequest('amount must be a positive number.');
+    }
+
     const account = await retrieveAccountById(accountId);
+    if (account == null) {
+      throw Boom.badRequest('Account does not exist.');
+    }
     const userId = account.user_id;
     const paymentReference = `account${accountId}`;
 
-    /**
-     * Read more about the payment_initiation/recipient/create endpoint:
-     * https://plaid.com/docs/api/products/payment-initiation/#payment_initiationrecipientcreate
-     */
-    const recipientCreateResponse = await plaid.paymentInitiationRecipientCreate(
-      {
-        name: COMPANY_NAME, // The beneficiary of the bank account. This will be displayed on the Link UI.
-        iban: 'NL06INGB5632579034', // non-existent example IBAN. In the UK provide "bacs" instead.
-      }
-    );
+    const recipientId = await getOrCreateRecipientId();
 
     /**
      * Plaid recommends using integers for arithmetic operations as accuracy might be lost when using floats.
@@ -49,7 +81,7 @@ router.post(
      * https://plaid.com/docs/api/products/payment-initiation/#payment_initiationpaymentcreate
      */
     const paymentCreateResponse = await plaid.paymentInitiationPaymentCreate({
-      recipient_id: recipientCreateResponse.data.recipient_id,
+      recipient_id: recipientId,
       amount: {
         currency: 'EUR',
         /**
