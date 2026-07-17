@@ -29,9 +29,7 @@ router.post(
      * fields at all. Treat the webhook purely as a "something changed, go
      * check" notification, then call paymentInitiationPaymentGet({ payment_id })
      * and read new_payment_status from that response instead of from
-     * request.body. That costs an extra Plaid API round trip on every
-     * webhook, versus a local signature check once the verification key is
-     * cached.
+     * request.body.
      */
     try {
       await verifyWebhook(
