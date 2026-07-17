@@ -25,12 +25,13 @@ router.post(
      * it - otherwise this endpoint would let anyone forge that webhook and
      * mark a payment executed without any money moving.
      *
-     * An alternative to verifying the JWT is to not trust the webhook body's
-     * fields at all: treat the webhook purely as a "something changed, go
+     * An alternative to verifying the JWT: don't trust the webhook body's
+     * fields at all. Treat the webhook purely as a "something changed, go
      * check" notification, then call paymentInitiationPaymentGet({ payment_id })
-     * and read new_payment_status back from that authoritative API response
-     * instead of from request.body. That sidesteps forged bodies too, at the
-     * cost of an extra Plaid API round trip on every webhook.
+     * and read new_payment_status from that response instead of from
+     * request.body. That costs an extra Plaid API round trip on every
+     * webhook, versus a local signature check once the verification key is
+     * cached.
      */
     try {
       await verifyWebhook(
