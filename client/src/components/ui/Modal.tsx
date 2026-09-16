@@ -5,7 +5,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   header: string;
-  onConfirm: (e: any) => void;
+  onConfirm: (e: React.FormEvent<HTMLFormElement>) => void;
   confirmText: string;
   isLoading?: boolean;
   children: React.ReactNode;

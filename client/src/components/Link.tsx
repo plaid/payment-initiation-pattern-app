@@ -32,7 +32,7 @@ const Link: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const onSuccess: PlaidLinkOnSuccess = (public_token, metadata) => {
+  const onSuccess: PlaidLinkOnSuccess = (_public_token, _metadata) => {
     redirectToCurrentUserIfNeeded();
 
     /**
@@ -51,7 +51,7 @@ const Link: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const onExit: PlaidLinkOnExit = (error, metadata) => {
+  const onExit: PlaidLinkOnExit = (error, _metadata) => {
     redirectToCurrentUserIfNeeded();
     terminalAppend({
       data: 'onExit: { ... }',

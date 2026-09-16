@@ -5,9 +5,7 @@ import { getUserLinkToken } from '../services/api.tsx';
 import useCurrentUser from '../services/currentUser.tsx';
 import Spinner from './ui/Spinner';
 
-interface Props {}
-
-const OAuth: React.FC<Props> = (props: Props) => {
+const OAuth: React.FC = () => {
   const history = useHistory();
   const { state } = useCurrentUser();
   const [fetchedLinkToken, setFetchedLinkToken] = useState<boolean>(false);

@@ -4,7 +4,6 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
-  Dispatch,
 } from 'react';
 import { TerminalEntryType } from '../components/types';
 
@@ -18,8 +17,7 @@ const initialState = {
 
 type TerminalAction = { type: 'APPEND'; entry: TerminalEntryType };
 
-interface TerminalContextShape extends TerminalState {
-  dispatch: Dispatch<TerminalAction>;
+interface TerminalContextShape {
   terminalState: TerminalState;
   terminalAppend: (entry: TerminalEntryType) => void;
 }
@@ -30,7 +28,7 @@ const TerminalContext = createContext<TerminalContextShape>(
 /**
  * @desc Maintains the currentUser context state and provides functions to update that state
  */
-export function TerminalProvider(props: any) {
+export function TerminalProvider(props: React.PropsWithChildren) {
   const [terminalState, dispatch] = useReducer(reducer, initialState);
   /**
    * @desc Requests details for a single User.
@@ -58,7 +56,7 @@ export function TerminalProvider(props: any) {
  */
 function reducer(state: TerminalState, action: TerminalAction): TerminalState {
   switch (action.type) {
-    case 'APPEND':
+    case 'APPEND': {
       const entries = [
         ...state.entries,
         {
@@ -71,6 +69,7 @@ function reducer(state: TerminalState, action: TerminalAction): TerminalState {
           a.time > b.time ? 1 : b.time > a.time ? -1 : 0
         ),
       };
+    }
     default:
       console.warn('unknown action: ', action.type, action.entry);
       return state;

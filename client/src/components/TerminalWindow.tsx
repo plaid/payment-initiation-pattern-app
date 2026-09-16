@@ -6,9 +6,7 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 SyntaxHighlighter.registerLanguage('json', json);
 import useTerminal from '../services/terminal.tsx';
 
-interface Props {}
-
-const TerminalWindow: React.FC<Props> = (props: Props) => {
+const TerminalWindow: React.FC = () => {
   const { terminalState } = useTerminal();
   const [open, setOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
