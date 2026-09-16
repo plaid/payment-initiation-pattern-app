@@ -10,6 +10,10 @@ iframe[id*='plaid-link-iframe'] {
 }
 .toast__background {
   background: #ffffff;
+  color: #111111;
+  font-size: 1.6rem;
+  white-space: pre-line;
+  padding-left: 0.8rem;
 }
 .toast__link {
   color: #ffffff;
@@ -17,13 +21,5 @@ iframe[id*='plaid-link-iframe'] {
 }
 .Toastify__toast--error.toast__background {
   background: #f44e66;
-}
-.Toastify__toast-body {
-  color: #111111;
-  font-size: 1.6rem;
-  white-space: pre-line;
-  padding-left: 0.8rem;
-}
-.Toastify__toast--error > .Toastify__toast-body {
   color: #ffffff;
 }
