@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { CurrentUserProvider } from './services/currentUser.tsx';
 import { TerminalProvider } from './services/terminal.tsx';
@@ -15,16 +15,14 @@ import TerminalWindow from './components/TerminalWindow.tsx';
 import OAuth from './components/OAuth.tsx';
 
 function App() {
-  toast.configure({
-    autoClose: 8000,
-    draggable: false,
-    toastClassName: 'box toast__background',
-    bodyClassName: 'toast__body',
-    hideProgressBar: true,
-  });
-
   return (
     <TerminalProvider>
+      <ToastContainer
+        autoClose={8000}
+        draggable={false}
+        toastClassName="box toast__background"
+        hideProgressBar
+      />
       <TerminalWindow />
       <CurrentUserProvider>
         <Sockets />
