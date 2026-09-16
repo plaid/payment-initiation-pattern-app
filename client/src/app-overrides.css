@@ -8,7 +8,7 @@ iframe[id*='plaid-link-iframe'] {
   top: 5.6rem;
   right: 5.2rem;
 }
-.toast__background {
+.Toastify__toast.toast__background {
   background: #ffffff;
   color: #111111;
   font-size: 1.6rem;
@@ -19,7 +19,7 @@ iframe[id*='plaid-link-iframe'] {
   color: #ffffff;
   text-decoration: underline;
 }
-.Toastify__toast--error.toast__background {
+.Toastify__toast.Toastify__toast--error.toast__background {
   background: #f44e66;
   color: #ffffff;
 }
