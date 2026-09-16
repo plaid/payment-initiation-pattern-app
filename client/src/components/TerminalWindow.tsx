@@ -11,7 +11,7 @@ interface Props {}
 const TerminalWindow: React.FC<Props> = (props: Props) => {
   const { terminalState } = useTerminal();
   const [open, setOpen] = useState(false);
-  const bottomRef = useRef<any>();
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
