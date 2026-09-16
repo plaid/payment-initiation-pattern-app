@@ -8,7 +8,11 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import { getUserById as apiGetUserById, loginUser } from './api.tsx';
+import {
+  getUserById as apiGetUserById,
+  loginUser,
+  getErrorMessage,
+} from './api.tsx';
 import { UserType } from '../components/types';
 
 interface CurrentUserState {
@@ -34,19 +38,19 @@ type CurrentUserAction =
       type: 'CLEAR';
     };
 
-interface CurrentUserContextShape extends CurrentUserState {
+interface CurrentUserContextShape {
   login: (username: string) => void;
   getUser: () => void;
   state: CurrentUserState;
 }
 const CurrentUserContext = createContext<CurrentUserContextShape>(
-  initialState as CurrentUserContextShape
+  initialState as unknown as CurrentUserContextShape
 );
 
 /**
  * @desc Maintains the currentUser context state and provides functions to update that state
  */
-export function CurrentUserProvider(props: any) {
+export function CurrentUserProvider(props: React.PropsWithChildren) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const history = useHistory();
 
@@ -70,12 +74,8 @@ export function CurrentUserProvider(props: any) {
         dispatch({ type: 'LOGIN', userId: loginResponse.data.id });
         history.push(`/profile`);
         toast.success(`Successful login. Welcome ${username}.`);
-      } catch (err: any) {
-        const errorMessage =
-          err.response?.data?.message ||
-          err.message ||
-          'An error occurred during login.';
-        toast.error(errorMessage);
+      } catch (err) {
+        toast.error(getErrorMessage(err, 'An error occurred during login.'));
       }
     },
     [dispatch, loginUser, history]
@@ -88,7 +88,7 @@ export function CurrentUserProvider(props: any) {
     try {
       const getUserResponse = await apiGetUserById(state.userId);
       dispatch({ type: 'GET', user: getUserResponse.data });
-    } catch (err: any) {
+    } catch {
       // Clear stale session if user no longer exists
       dispatch({ type: 'CLEAR' });
       toast.error('Session expired. Please log in again.');

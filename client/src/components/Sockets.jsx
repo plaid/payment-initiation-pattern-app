@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
 import useCurrentUser from '../services/currentUser.tsx';
@@ -9,7 +9,7 @@ const VITE_SERVER_PORT = import.meta.env.VITE_SERVER_PORT;
 const Sockets = () => {
   const socket = useRef();
   const { terminalAppend } = useTerminal();
-  const { state, getUser } = useCurrentUser();
+  const { getUser } = useCurrentUser();
 
   useEffect(() => {
     socket.current = io(`http://localhost:${VITE_SERVER_PORT}`);

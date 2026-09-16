@@ -5,7 +5,7 @@ import Modal from './ui/Modal';
 import useCurrentUser from '../services/currentUser.tsx';
 import TextInput from './ui/TextInput';
 import { toast } from 'react-toastify';
-import { addNewUser } from '../services/api.tsx';
+import { addNewUser, getErrorMessage } from '../services/api.tsx';
 
 const CreateUser: React.FC = () => {
   const [showModal, setShowModalModal] = useState(false);
@@ -13,18 +13,16 @@ const CreateUser: React.FC = () => {
 
   const { login } = useCurrentUser();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       await addNewUser(username);
       login(username);
       setShowModalModal(false);
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message ||
-        err.message ||
-        'An error occurred while creating user.';
-      toast.error(errorMessage);
+    } catch (err) {
+      toast.error(
+        getErrorMessage(err, 'An error occurred while creating user.')
+      );
     }
   };
 

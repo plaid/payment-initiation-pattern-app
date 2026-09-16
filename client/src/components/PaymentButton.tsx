@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Button from './ui/Button';
-import { createPaymentAndLinkToken } from '../services/api.tsx';
+import {
+  createPaymentAndLinkToken,
+  getErrorMessage,
+} from '../services/api.tsx';
 import { toast } from 'react-toastify';
 import Link from './Link.tsx';
 import useTerminal from '../services/terminal.tsx';
@@ -32,8 +35,8 @@ const PaymentButton: React.FC<Props> = (props: Props) => {
       const linkToken = createPaymentResponse.data.link_token;
       localStorage.setItem('link_token', linkToken);
       setLinkToken(linkToken);
-    } catch (err: any) {
-      toast.error(err?.message || 'An error occurred.');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'An error occurred.'));
       setLoading(false);
     }
   };
