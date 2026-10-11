@@ -2,7 +2,7 @@
  * @file Defines the queries for the accounts table.
  */
 
-const db = require('../');
+const db = require('..');
 
 const createAccount = async (userId, name) => {
   const query = {

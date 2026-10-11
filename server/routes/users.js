@@ -21,15 +21,14 @@ const router = express.Router();
 /**
  * Computes account balance based on a list of payment orders
  */
-const computeBalance = orders => {
-  return orders.reduce((sum, order) => {
+const computeBalance = orders =>
+  orders.reduce((sum, order) => {
     if (order.payment_executed) {
       // eslint-disable-next-line no-param-reassign
       sum += order.amount / 100;
     }
     return sum;
   }, 0);
-};
 
 const getUserWithRelations = async userId => {
   const user = await retrieveUserById(userId);
@@ -75,8 +74,7 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { username } = req.body;
     const usernameExists = await retrieveUserByUsername(username);
-    if (usernameExists)
-      throw Boom.conflict('Username already exists');
+    if (usernameExists) throw Boom.conflict('Username already exists');
     const user = await createUser(username);
 
     // create some accounts by default

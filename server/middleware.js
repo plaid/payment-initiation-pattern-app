@@ -8,9 +8,8 @@ const Boom = require('@hapi/boom');
  * A higher-order function that wraps an async callback to properly trigger the
  * Express error-handling middleware on errors.
  */
-const asyncWrapper = fn => (req, res, next) => {
-  return Promise.resolve(fn(req, res, next)).catch(next);
-};
+const asyncWrapper = fn => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 /**
  * A catch-all error handler that sends a formatted JSON response.

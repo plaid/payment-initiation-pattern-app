@@ -3,7 +3,7 @@
  */
 
 const format = require('pg-format');
-const db = require('../');
+const db = require('..');
 
 const createOrder = async (accountId, paymentId, paymentReference, amount) => {
   const query = {

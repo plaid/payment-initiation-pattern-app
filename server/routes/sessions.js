@@ -20,8 +20,7 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { username } = req.body;
     const user = await retrieveUserByUsername(username);
-    if (user == null)
-      throw Boom.badRequest('User does not exist.');
+    if (user == null) throw Boom.badRequest('User does not exist.');
 
     res.json(user);
   })
