@@ -12,7 +12,6 @@
 
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const jwkToPem = require('jwk-to-pem');
 const { plaid } = require('./plaid');
 
 /**
@@ -92,8 +91,8 @@ const verifyWebhook = async (rawBody, signedJwt) => {
     throw new Error(`Webhook verification key ${keyId} has expired.`);
   }
 
-  const pem = jwkToPem(key);
-  const payload = jwt.verify(signedJwt, pem, { algorithms: ['ES256'] });
+  const publicKey = crypto.createPublicKey({ key, format: 'jwk' });
+  const payload = jwt.verify(signedJwt, publicKey, { algorithms: ['ES256'] });
 
   /**
    * Reject tokens that aren't fresh. Without this, a captured webhook body/JWT
