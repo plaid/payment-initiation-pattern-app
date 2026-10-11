@@ -40,10 +40,8 @@ router.post(
       throw Boom.unauthorized(`Webhook verification failed: ${err.message}`);
     }
 
-    const {
-      webhook_code: webhookCode,
-      timestamp: webhookTimestamp,
-    } = request.body;
+    const { webhook_code: webhookCode, timestamp: webhookTimestamp } =
+      request.body;
     const { io } = request;
 
     /**
@@ -51,10 +49,8 @@ router.post(
      * https://plaid.com/docs/api/products/payment-initiation/#payment_status_update
      */
     if (webhookCode === 'PAYMENT_STATUS_UPDATE') {
-      const {
-        payment_id: paymentId,
-        new_payment_status: paymentStatus,
-      } = request.body;
+      const { payment_id: paymentId, new_payment_status: paymentStatus } =
+        request.body;
       /**
        * It is not strictly required to persist payment status updates themselves but,
        * Plaid recommends doing so for auditability purposes.

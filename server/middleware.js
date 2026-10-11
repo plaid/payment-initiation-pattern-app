@@ -8,9 +8,8 @@ const Boom = require('@hapi/boom');
  * A higher-order function that wraps an async callback to properly trigger the
  * Express error-handling middleware on errors.
  */
-const asyncWrapper = fn => (req, res, next) => {
-  return Promise.resolve(fn(req, res, next)).catch(next);
-};
+const asyncWrapper = fn => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 /**
  * A catch-all error handler that sends a formatted JSON response.
@@ -18,6 +17,8 @@ const asyncWrapper = fn => (req, res, next) => {
  *
  * If using multiple error handlers, this should be the last one..
  */
+// Express identifies error-handling middleware by its four-argument signature.
+// eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
   let error = err;
   console.log(error);

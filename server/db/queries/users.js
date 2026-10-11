@@ -2,7 +2,7 @@
  * @file Defines the queries for the users table.
  */
 
-const db = require('../');
+const db = require('..');
 
 const createUser = async username => {
   const query = {

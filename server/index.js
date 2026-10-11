@@ -29,12 +29,12 @@ const server = app.listen(PORT, () => {
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3002",
-    methods: ["*"], 
-    allowedHeaders: ["*"],
-    credentials: true, 
+    origin: 'http://localhost:3002',
+    methods: ['*'],
+    allowedHeaders: ['*'],
+    credentials: true,
   },
-  allowEIO3: true
+  allowEIO3: true,
 });
 
 // middleware to pass socket to each request object
