@@ -5,15 +5,14 @@ const prettyPrintResponse = response => {
   console.log(util.inspect(response.data, { colors: true, depth: 4 }));
 };
 
-const groupBy = function (xs, key) {
-  return xs.reduce((rv, x) => {
+const groupBy = (xs, key) =>
+  xs.reduce((rv, x) => {
     // eslint-disable-next-line no-param-reassign
     (rv[x[key]] = rv[x[key]] || []).push(x);
     return rv;
   }, {});
-};
 
-const getPublicUrlForBackend = async function () {
+const getPublicUrlForBackend = async () => {
   let response;
   try {
     response = await fetch('http://localhost:4040/api/tunnels');

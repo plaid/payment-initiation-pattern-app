@@ -17,6 +17,8 @@ const asyncWrapper = fn => (req, res, next) =>
  *
  * If using multiple error handlers, this should be the last one..
  */
+// Express identifies error-handling middleware by its four-argument signature.
+// eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
   let error = err;
   console.log(error);
