@@ -10,7 +10,15 @@ const { getPublicUrlForBackend } = require('../util');
 const { retrieveAccountById } = require('../db/queries/accounts');
 const { createOrder } = require('../db/queries');
 
-const { PLAID_SANDBOX_REDIRECT_URI } = process.env;
+const {
+  PLAID_ENV,
+  PLAID_SANDBOX_REDIRECT_URI,
+  PLAID_PRODUCTION_REDIRECT_URI,
+} = process.env;
+const PLAID_REDIRECT_URI =
+  PLAID_ENV === 'production'
+    ? PLAID_PRODUCTION_REDIRECT_URI
+    : PLAID_SANDBOX_REDIRECT_URI;
 const COMPANY_NAME = 'Company Name';
 
 const router = express.Router();
@@ -135,8 +143,8 @@ router.post(
        * To support these flows and redirect users back to your client application you will need to implement a publicly accessible OAuth endpoint.
        * Read more about Oauth: https://plaid.com/docs/link/oauth/
        */
-      ...(PLAID_SANDBOX_REDIRECT_URI && {
-        redirect_uri: PLAID_SANDBOX_REDIRECT_URI,
+      ...(PLAID_REDIRECT_URI && {
+        redirect_uri: PLAID_REDIRECT_URI,
       }),
       webhook: webhookUrl,
     });

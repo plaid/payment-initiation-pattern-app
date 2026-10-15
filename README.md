@@ -167,7 +167,7 @@ To test the OAuth redirect URI flow you may use the Chrome browser to simulate a
 
 #### In Production
 
-When running in Production, you must use an https:// URL. The server reads only `PLAID_SANDBOX_REDIRECT_URI` in every environment, so set `PLAID_SANDBOX_REDIRECT_URI=https://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/team/api).
+When running in Production, you must use an https:// URL. Set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/team/api).
 
 To run localhost with https, create a self-signed certificate. Note that self-signed certificates should be used for testing purposes only.
 
