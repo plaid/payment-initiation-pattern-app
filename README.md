@@ -8,7 +8,7 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 ## Requirements
 
-- [Node.js][nodejs] v20.12 or higher
+- [Node.js][nodejs] 20.19+ or 22.12+
 - [PostgreSQL][postgres] 16 (install via [Homebrew][homebrew]: `brew install postgresql@16`)
 - [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 - [ngrok][ngrok] to expose your local server for Plaid webhooks - [sign up for a free account](https://dashboard.ngrok.com/signup)
@@ -32,6 +32,12 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 1. Make sure PostgreSQL is running.
    ```shell
    brew services start postgresql@16
+   ```
+
+1. Create the `postgres` role. The Makefile's database commands connect as `postgres`, which Homebrew's PostgreSQL doesn't create. `postgresql@16` is keg-only, so link it first to put `psql` and `createuser` on your `PATH`. Enter `password` (the `.env` default) when prompted.
+   ```shell
+   brew link --force postgresql@16
+   createuser -s -P postgres
    ```
 
 1. Install dependencies.
@@ -81,7 +87,7 @@ The Pattern web client is written in TypeScript using [React][react]. It present
 
 ### Communicating with the server
 
-All HTTP calls to the Pattern server are defined in `src/services/api.js`.
+All HTTP calls to the Pattern server are defined in `client/src/services/api.tsx`.
 
 ### Webhooks and Websockets
 
@@ -134,7 +140,7 @@ The database is automatically initialized on the first `make start` if the table
 
 **PostgreSQL connection refused**: Make sure PostgreSQL is running (`brew services list`). If you installed it via Homebrew, start it with `brew services start postgresql@16`.
 
-**Database authentication errors**: The default `.env` uses `postgres` / `password`. If your local PostgreSQL has different credentials, update your `.env` file accordingly.
+**Database authentication errors**: The default `.env` uses `postgres` / `password`. If your local PostgreSQL has different credentials, update your `.env` file accordingly. The Makefile's database commands ignore `.env` and always connect as the `postgres` role, so that role must exist.
 
 View [Plaid server logs](https://dashboard.plaid.com/developers/logs) on the Dashboard.
 
@@ -210,7 +216,7 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [plaid]: https://plaid.com
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
-[plaid-keys]: https://dashboard.plaid.com/account/keys
+[plaid-keys]: https://dashboard.plaid.com/developers/keys
 [plaid-node]: https://github.com/plaid/plaid-node
 [plaid-quickstart]: https://plaid.com/docs/quickstart/
 [plaid-signup]: https://dashboard.plaid.com/signup
