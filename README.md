@@ -112,8 +112,6 @@ Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok 
 
 **Do NOT use ngrok in production!** It's only included here as a convenience for local development.
 
-ngrok's free account has a session limit of 2 hours. When your session expires, any previously linked Items will stop receiving webhooks because they're registered with the old ngrok URL.
-
 Prefer a different tunneling tool? Any setup that exposes the server on port 5001 over HTTPS will work, as long as it's also reachable at `http://localhost:4040/api/tunnels` (the endpoint `server/util.js` queries to discover the public URL).
 
 # Database
@@ -161,13 +159,13 @@ Then attach your debugger to port 9229. In VS Code, use a "Node.js: Attach" laun
 
 #### In Sandbox
 
-Set `PLAID_SANDBOX_REDIRECT_URI=http://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/team/api).
+Set `PLAID_SANDBOX_REDIRECT_URI=http://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/developers/api).
 
 To test the OAuth redirect URI flow you may use the Chrome browser to simulate a mobile device. Learn how to do this under "Mobile Device Viewport Mode" here: https://developer.chrome.com/docs/devtools/device-mode/
 
 #### In Production
 
-When running in Production, you must use an https:// URL. Set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/team/api).
+When running in Production, you must use an https:// URL. Set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3002/oauth-link` in your `.env` file, then register this URI in your [Plaid Dashboard](https://dashboard.plaid.com/developers/api).
 
 To run localhost with https, create a self-signed certificate. Note that self-signed certificates should be used for testing purposes only.
 
@@ -183,11 +181,13 @@ mkcert localhost
 This creates `localhost.pem` and `localhost-key.pem` in the client folder. Then update `client/vite.config.ts` to add HTTPS configuration to the server options:
 
 ```typescript
+import fs from 'fs';
+
 server: {
   port: 3002,
   https: {
-    key: './localhost-key.pem',
-    cert: './localhost.pem',
+    key: fs.readFileSync('localhost-key.pem'),
+    cert: fs.readFileSync('localhost.pem'),
   },
   // ... proxy config
 }
