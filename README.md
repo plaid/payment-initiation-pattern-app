@@ -181,13 +181,11 @@ mkcert localhost
 This creates `localhost.pem` and `localhost-key.pem` in the client folder. Then update `client/vite.config.ts` to add HTTPS configuration to the server options:
 
 ```typescript
-import fs from 'fs';
-
 server: {
   port: 3002,
   https: {
-    key: fs.readFileSync('localhost-key.pem'),
-    cert: fs.readFileSync('localhost.pem'),
+    key: './localhost-key.pem',
+    cert: './localhost.pem',
   },
   // ... proxy config
 }
